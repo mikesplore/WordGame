@@ -31,7 +31,8 @@ object GlobalVariables {
     var thanksname: MutableState<String> = mutableStateOf("anonymous")
     var hint: MutableState<String> = mutableStateOf("")
     var selectedcategory: String = "Mike"
-    var word: MutableState<String> = mutableStateOf(getRandomWord(selectedcategory))
+    var selectedlevel: String = "easy"
+    var word: MutableState<String> = mutableStateOf(getRandomWord(selectedcategory,GlobalVariables.selectedlevel))
     var timer: MutableState<Int> = mutableStateOf(60)
     var timerRunning: MutableState<Boolean> = mutableStateOf(true)
     var enterednamecolor: MutableState<Color> = mutableStateOf(Color.White)
@@ -67,14 +68,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyScreens() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "screen1") {
-        composable("screen4") { Screen4(navController) }
-        composable("screen5") { Screen5(navController) }
-        composable("screen3") { Screen3(navController) }
-        composable("screen1") { Screen1(navController) }
-        composable("profile/{name}") { backStackEntry ->
+    NavHost(navController = navController, startDestination = "NameScreen") {
+        composable("GameScreen") { GameScreen(navController) }
+        composable("GameSummaryScreen") { GameSummaryScreen(navController) }
+        composable("CategoryScreen") { CategoryScreen(navController) }
+        composable("NameScreen") { NameScreen(navController) }
+        composable("LevelScreen") { LevelScreen(navController) }
+        composable("HelloScreen/{name}") { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: ""
-            Screen2(navController, name)
+            HelloScreen(navController, name)
         }
     }
 }

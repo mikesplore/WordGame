@@ -1,7 +1,6 @@
 package com.example.mynavigation
 
-import android.content.Context
-import android.provider.Settings.Global
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,10 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import getHighScore
 import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.delay
-import storeHighScore
 
 
 
@@ -59,7 +55,7 @@ import storeHighScore
 import java.util.Locale
 
 @Composable
-fun Screen4(navController: NavController) {
+fun GameScreen(navController: NavController) {
     var isVisible by remember { mutableStateOf(true) }
 
     AnimatedVisibility(
@@ -67,18 +63,15 @@ fun Screen4(navController: NavController) {
         enter = fadeIn() + slideInVertically(),
         exit = fadeOut() + slideOutVertically()
     ) {
-        GameScreen(
-            navController = navController,
-            length = GlobalVariables.word.value.length,
-            first = GlobalVariables.word.value.first(),
-            last = GlobalVariables.word.value.last()
+        Gamescreen(
+            navController = navController
         )
     }
 }
 
 
 @Composable
-fun GameScreen(navController: NavController, length: Int, first: Char, last: Char) {
+fun Gamescreen(navController: NavController) {
     val context = LocalContext.current
     val length = GlobalVariables.word.value.length
     val first = GlobalVariables.word.value.first()
@@ -118,35 +111,20 @@ fun GameScreen(navController: NavController, length: Int, first: Char, last: Cha
                     // Stop the timer
                     GlobalVariables.timerRunning.value = false
 
-                    // Check if the current score is higher than the stored high score
-                    val currentScore = GlobalVariables.score.value
-                    val highScore = getHighScore(context = context)
-                    if (currentScore > highScore) {
-                        // Update the high score
-                        storeHighScore(context = context, highscore = GlobalVariables.high_score.value)
-                        val retrievedHighScore = getHighScore(context = context)
-                    }
-
-                    // Navigate to "Screen5"
-                    navController.navigate("Screen5")
-
                     // Set outcome message
                     GlobalVariables.outcome.value = "Time is Up\nRestart game"
 
-                    // Set outcome color
                     GlobalVariables.outcomeColor.value = Color(0xffb80d0d)
 
-                    break // Exit the loop when timer reaches 0
+                   delay(2000L)
+
+                    navController.navigate("GameSummaryScreen")
+
+                    break
                 }
             }
         }
     }
-
-
-
-
-
-
 
 
 
@@ -189,7 +167,7 @@ fun GameScreen(navController: NavController, length: Int, first: Char, last: Cha
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-                var hintcolor = GlobalVariables.hintcolor.value
+                val hintcolor = GlobalVariables.hintcolor.value
                 Row (modifier = Modifier
                     .width(250.dp)
                     .height(100.dp)
@@ -276,6 +254,7 @@ fun GameScreen(navController: NavController, length: Int, first: Char, last: Cha
 
         Button(
             onClick = {
+                    if(GlobalVariables.timer.value>0){
                 if (inputWord.isNotEmpty()){
                 GlobalVariables.outcome.value = compareWord(inputWord)
                 buttonText = GlobalVariables.outcome.value
@@ -284,7 +263,7 @@ fun GameScreen(navController: NavController, length: Int, first: Char, last: Cha
                     GlobalVariables.outcomeColor.value = Color(0xff1e8a37)
                     GlobalVariables.hint.value = GlobalVariables.word.value
                     GlobalVariables.hintcolor.value = Color(0xff1e8a37)
-                    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory)
+                    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory, GlobalVariables.selectedlevel)
                     GlobalVariables.timer.value+=10
                     GlobalVariables.correctGuesscount.value+=1
                     GlobalVariables.Attempts.value+=1
@@ -299,6 +278,7 @@ fun GameScreen(navController: NavController, length: Int, first: Char, last: Cha
                 GlobalVariables.hint.value = "Please enter a word"
                     GlobalVariables.hintcolor.value = Color(0xff042c4a)
             }
+           }else{navController.navigate("GameSummaryScreen")}
                       },modifier = Modifier,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(Color(0xffF6B17A))
@@ -338,8 +318,7 @@ fun GameScreen(navController: NavController, length: Int, first: Char, last: Cha
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             AnswerBoxButton()
-            SkipButton()
-            val highScore = GlobalVariables.high_score.value
+            SkipButton(navController = navController)
             EndGameButton(navController = navController)
         }
     }
@@ -349,7 +328,7 @@ fun GameScreen(navController: NavController, length: Int, first: Char, last: Cha
 
 @Composable
 fun ScoreBox() {
-var Score = GlobalVariables.score.value
+val Score = GlobalVariables.score.value
     Box(modifier = Modifier
         .size(100.dp)
         .background(Color(0xff424769), shape = RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center){
@@ -366,7 +345,10 @@ var Score = GlobalVariables.score.value
 fun TimerBox() {
     Box(modifier = Modifier
         .size(100.dp)
-        .background(color = GlobalVariables.timerbackgroundcolor.value, shape = RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center){
+        .background(
+            color = GlobalVariables.timerbackgroundcolor.value,
+            shape = RoundedCornerShape(10.dp)
+        ), contentAlignment = Alignment.Center){
         Column (modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally){
             Text(text = "${GlobalVariables.timer.value}", style = TextStyle(), fontSize = 50.sp, fontFamily = FontFamily.Serif,color= Color(0xffF6B17A), fontWeight = FontWeight.Bold)
 
@@ -400,16 +382,20 @@ fun AnswerBoxButton(){
                      GlobalVariables.timer.value-=2
                      GlobalVariables.hint.value = GlobalVariables.word.value
                      GlobalVariables.hintcolor.value = Color(0xffF6B17A)
-                     GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory)}, modifier = Modifier.width(105.dp),shape= RoundedCornerShape(10.dp), colors = ButtonDefaults.buttonColors(Color(0xffF6B17A))) {
+                     GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory, GlobalVariables.selectedlevel)}, modifier = Modifier.width(105.dp),shape= RoundedCornerShape(10.dp), colors = ButtonDefaults.buttonColors(Color(0xffF6B17A))) {
         Text(text = "Answer",style = TextStyle(), fontFamily = FontFamily.Serif, fontSize = 15.sp,color=Color(0xff2D3250))
     }
 }
 
 @Composable
-fun SkipButton(){
-    Button(onClick = {  GlobalVariables.timer.value-=1
+fun SkipButton(navController: NavController){
+    Button(onClick = {  if (GlobalVariables.timer.value!=0){
+                        GlobalVariables.timer.value-=1
                         GlobalVariables.skippedguess.value+=1
-                        GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory)
+                        GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory,GlobalVariables.selectedlevel)}else{
+
+                            navController.navigate("GameSummaryScreen")
+                        }
                      }, modifier = Modifier.width(100.dp),shape= RoundedCornerShape(10.dp),colors = ButtonDefaults.buttonColors(Color(0xffF6B17A))) {
         Text(text = "Skip",style = TextStyle(), fontFamily = FontFamily.Serif, fontSize = 15.sp,color=Color(0xff2D3250))
     }
@@ -419,7 +405,7 @@ fun SkipButton(){
 fun EndGameButton(navController: NavController) {
     Button(
         onClick = {
-            navController.navigate("screen5")
+            navController.navigate("GameSummaryScreen")
             // You can pass the high score to be stored
         },
         modifier = Modifier.width(105.dp),
@@ -463,22 +449,6 @@ fun WordField(
 }
 
 
-
-
-
-
-fun getWordLength(): Int {
-    return GlobalVariables.word.value.length
-}
-
-fun getFirstLetter(): Char {
-    return GlobalVariables.word.value.first()
-}
-
-fun getLastLetter(): Char {
-    return GlobalVariables.word.value.last()
-}
-
 fun compareWord(guess:String): String{
 
     val result: String
@@ -497,11 +467,9 @@ fun compareWordd(guess: String): Boolean {
 
 
 
-
-
 @Preview(heightDp = 850)
 @Composable
-fun Screen4Preview(){
-    Screen4(navController = rememberNavController())
+fun GameScreenPreview(){
+    GameScreen(navController = rememberNavController())
 }
 

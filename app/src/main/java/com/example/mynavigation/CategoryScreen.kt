@@ -38,7 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import java.util.Locale
 
 @Composable
-fun Screen3(navController: NavController) {
+fun CategoryScreen(navController: NavController) {
     var isVisible by remember { mutableStateOf(true) }
 
     AnimatedVisibility(
@@ -162,16 +162,16 @@ fun CategorySCreen(navController: NavController) {
             contentAlignment = Alignment.Center
         ) {
             Button(
-                onClick = { navController.navigate("Screen4") },
+                onClick = { navController.navigate("LevelScreen") },
                 modifier = Modifier
-                    .width(250.dp)
+                    .width(300.dp)
                     .padding(16.dp),
                 shape = RoundedCornerShape(10.dp), // Rounded corners
                 colors = ButtonDefaults.buttonColors(Color(0xffF6B17A)),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
             ) {
                 Text(
-                    text = "Play Game",
+                    text = "Select game level",
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontFamily = FontFamily.Serif,
@@ -222,6 +222,6 @@ fun CategoryButton(
 
 @Preview()
 @Composable
-fun Screen3Preview(){
-    Screen3(navController = rememberNavController())
+fun CategoryScreenPreview(){
+    CategoryScreen(navController = rememberNavController())
 }

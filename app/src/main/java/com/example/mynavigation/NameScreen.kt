@@ -46,7 +46,7 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 
 @Composable
-fun Screen1(navController: NavController){
+fun NameScreen(navController: NavController){
     var isVisible by remember { mutableStateOf(true) }
     AnimatedVisibility(
         visible = isVisible,
@@ -146,7 +146,7 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
             onClick = {
                 if (username.trim().isNotEmpty()) {
                     onNameEntered(username.trim())
-                    navController.navigate("profile/$username".trim())
+                    navController.navigate("HelloScreen/$username".trim())
                 } else {
                     entername = "No username entered"
                     GlobalVariables.enterednamecolor.value = Color.Red
@@ -268,6 +268,6 @@ fun versionNumber(){
 
 @Preview(heightDp = 850)
 @Composable
-fun Screen1Preview(){
-    Screen1(navController = rememberNavController())
+fun NameScreenPreview(){
+    NameScreen(navController = rememberNavController())
 }

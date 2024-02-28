@@ -1,6 +1,5 @@
 package com.example.mynavigation
 
-import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -44,7 +43,7 @@ import java.util.Locale
 import kotlin.system.exitProcess
 
 @Composable
-fun Screen5(navController: NavController){
+fun GameSummaryScreen(navController: NavController){
     val isVisible by remember { mutableStateOf(true) }
     AnimatedVisibility(
         visible = isVisible,
@@ -221,14 +220,14 @@ fun ResultScreen(navController: NavController) {
             // Play Again Button
             Button(
                 onClick = {
-                    navController.navigate("Screen4")
+                    navController.navigate("GameScreen")
                     GlobalVariables.score.value = 0
                     GlobalVariables.timer.value = 60
                     GlobalVariables.timerRunning.value = true
                     GlobalVariables.correctGuesscount.value=0
                     GlobalVariables.wrongGuesscount.value=0
                     GlobalVariables.skippedguess.value=0
-                    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory)
+                    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory,GlobalVariables.selectedlevel)
 
                 },
                 modifier = Modifier.width(150.dp),
@@ -301,7 +300,7 @@ fun exitApplication() {
 
 @Preview(heightDp = 850)
 @Composable
-fun Screen5Preview(){
-    Screen5(navController = rememberNavController())
+fun GameSummaryScreenPreview(){
+    GameSummaryScreen(navController = rememberNavController())
 
 }

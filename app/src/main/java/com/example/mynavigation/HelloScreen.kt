@@ -41,7 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import java.util.Locale
 
 @Composable
-fun Screen2(navController: NavController, name: String){
+fun HelloScreen(navController: NavController, name: String){
     var isVisible by remember { mutableStateOf(true) }
     AnimatedVisibility(
         visible = isVisible,
@@ -94,7 +94,7 @@ fun Ruleclick(navController: NavController) {
 
     Button(
         onClick = {
-            navController.navigate("screen3")
+            navController.navigate("CategoryScreen")
         },
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         modifier = Modifier
@@ -117,7 +117,7 @@ fun Ruleclick(navController: NavController) {
 fun ProceedToGameButton(navController: NavController){
     Button(onClick = {
 
-        navController.navigate("screen3") },
+        navController.navigate("CategoryScreen") },
         modifier = Modifier
             .width(250.dp)
             .height(50.dp),
@@ -157,6 +157,6 @@ fun NameProfile(name: String) {
 
 @Preview(heightDp = 850)
 @Composable
-fun Screen2Preview(){
-    Screen2(navController = rememberNavController(),"Mike")
+fun HelloScreenPreview(){
+    HelloScreen(navController = rememberNavController(),"Mike")
 }
