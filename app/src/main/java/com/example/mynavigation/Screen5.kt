@@ -1,7 +1,6 @@
 package com.example.mynavigation
 
 import android.content.Context
-import android.provider.Settings.Global
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -28,12 +26,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -45,10 +41,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import java.util.Locale
+import kotlin.system.exitProcess
 
 @Composable
 fun Screen5(navController: NavController){
-    var isVisible by remember { mutableStateOf(true) }
+    val isVisible by remember { mutableStateOf(true) }
     AnimatedVisibility(
         visible = isVisible,
         enter = fadeIn() + slideInVertically(),
@@ -211,7 +208,7 @@ fun ResultScreen(navController: NavController) {
         }
 
         // Thanks Box
-        thanksbox()
+        Thanksbox()
 
         // Buttons Row
         Row(
@@ -226,7 +223,7 @@ fun ResultScreen(navController: NavController) {
                 onClick = {
                     navController.navigate("Screen4")
                     GlobalVariables.score.value = 0
-                    GlobalVariables.timer.value = 30
+                    GlobalVariables.timer.value = 60
                     GlobalVariables.timerRunning.value = true
                     GlobalVariables.correctGuesscount.value=0
                     GlobalVariables.wrongGuesscount.value=0
@@ -253,7 +250,7 @@ fun ResultScreen(navController: NavController) {
             // Exit Game Button
             Button(
                 onClick = {
-                    ExitApplication(context)
+                    exitApplication()
                 },
                 modifier = Modifier.width(150.dp),
                 shape = RoundedCornerShape(10.dp),
@@ -276,7 +273,7 @@ fun ResultScreen(navController: NavController) {
 
 
 @Composable
-fun thanksbox(){
+fun Thanksbox(){
     Box(modifier = Modifier
         .height(50.dp)
         .background(Color(0xff424769), shape = RoundedCornerShape(10.dp))
@@ -293,11 +290,11 @@ fun thanksbox(){
 
 
 
-fun ExitApplication(context: Context) {
+fun exitApplication() {
 
             val activity: MainActivity = MainActivity()
             activity.finish()
-            java.lang.System.exit(0)
+            exitProcess(0)
 
      }
 
