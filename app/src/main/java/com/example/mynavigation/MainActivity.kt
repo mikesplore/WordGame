@@ -1,5 +1,6 @@
 package com.example.mynavigation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,14 +32,13 @@ object GlobalVariables {
     var hint: MutableState<String> = mutableStateOf("")
     var selectedcategory: String = "Mike"
     var word: MutableState<String> = mutableStateOf(getRandomWord(selectedcategory))
-    var timer: MutableState<Int> = mutableStateOf(30)
+    var timer: MutableState<Int> = mutableStateOf(60)
     var timerRunning: MutableState<Boolean> = mutableStateOf(true)
     var enterednamecolor: MutableState<Color> = mutableStateOf(Color.White)
     var timerbackgroundcolor: MutableState<Color> = mutableStateOf(Color(0xff7077A1))
     var correctGuesscount: MutableState<Int> = mutableStateOf(0)
     var wrongGuesscount: MutableState<Int> = mutableStateOf(0)
     var skippedguess: MutableState<Int> = mutableStateOf(0)
-    var correctpercentage: MutableState<Int> = mutableStateOf(0)
     var Attempts: MutableState<Int> = mutableStateOf(0)
 
 
@@ -47,6 +47,7 @@ object GlobalVariables {
 }
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -79,7 +80,7 @@ fun MyScreens() {
 }
 @Preview
 @Composable
-fun myscreenpreview(){
+fun Myscreenpreview(){
     MyScreens()
 }
 
