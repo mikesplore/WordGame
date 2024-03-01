@@ -1,4 +1,4 @@
-package com.example.mynavigation
+package com.mike.wordgame
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn

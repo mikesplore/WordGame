@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mynavigation"
+    namespace = "com.example.wordgame"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.mynavigation"
+        applicationId = "com.mike.wordgame"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

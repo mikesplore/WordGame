@@ -1,4 +1,4 @@
-package com.example.mynavigation
+package com.mike.wordgame
 
 import org.junit.Test
 

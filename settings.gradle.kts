@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MyNavigation"
+rootProject.name = "WordGame"
 include(":app")
  

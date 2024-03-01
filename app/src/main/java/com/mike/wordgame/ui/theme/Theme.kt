@@ -1,4 +1,4 @@
-package com.example.mynavigation.ui.theme
+package com.mike.wordgame.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -1,4 +1,4 @@
-package com.example.mynavigation.ui.theme
+package com.mike.wordgame.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package com.example.mynavigation
+package com.mike.wordgame
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mynavigation.ui.theme.MyNavigationTheme
+import com.mike.wordgame.ui.theme.MyNavigationTheme
 
 object GlobalVariables {
     var outcome: MutableState<String> = mutableStateOf("Outcome")

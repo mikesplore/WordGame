@@ -1,4 +1,4 @@
-package com.example.mynavigation
+package com.mike.wordgame
 
 fun getRandomWord(category: String, selectedLevel: String): String {
     return when (selectedLevel.lowercase()) {
