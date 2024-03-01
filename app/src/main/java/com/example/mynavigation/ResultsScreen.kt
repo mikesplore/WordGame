@@ -1,8 +1,10 @@
 package com.example.mynavigation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -47,8 +49,8 @@ fun GameSummaryScreen(navController: NavController){
     val isVisible by remember { mutableStateOf(true) }
     AnimatedVisibility(
         visible = isVisible,
-        enter = fadeIn() + slideInVertically(),
-        exit = fadeOut() + slideOutVertically()
+        enter = fadeIn()+ expandIn(),
+        exit = fadeOut() + slideOutVertically()+ shrinkOut()
     ) {
     ResultScreen(navController = navController)
 

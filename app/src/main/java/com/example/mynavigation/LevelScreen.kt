@@ -1,5 +1,11 @@
 package com.example.mynavigation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,71 +39,91 @@ import androidx.navigation.compose.rememberNavController
 
 
 @Composable
+
 fun LevelScreen(navController: NavController){
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(Color(0xff1F2138)),
-        verticalArrangement = Arrangement.SpaceAround,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-
-        Row (modifier= Modifier
-            .absolutePadding(0.dp, 30.dp)
-            .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center){
-            Text("GAME LEVEL", style = TextStyle(),
-                color = Color.White,
-                fontSize = 50.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.Bold,
-
-            )
-
-        }
+    var isVisible by remember { mutableStateOf(true) }
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = fadeIn() + expandIn(),
+        exit = fadeOut() + slideOutVertically() + shrinkOut()
+    ) {
 
 
-        Gamelevels()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xff1F2138)),
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        Row (modifier= Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center){
-
-
-            Button(onClick = { navController.navigate("GameScreen") },
-                colors = ButtonDefaults.buttonColors(Color(0xffF6B17A)),
-                shape = RoundedCornerShape(10.dp),
+            Row(
                 modifier = Modifier
-                    .absolutePadding(0.dp, 0.dp, 0.dp, 30.dp)
-                    .width(200.dp)
-
-
-
+                    .absolutePadding(0.dp, 30.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(text = "Play", style = TextStyle(),
-                    fontWeight = FontWeight.SemiBold,
+                Text(
+                    "GAME LEVEL", style = TextStyle(),
+                    color = Color.White,
+                    fontSize = 50.sp,
                     fontFamily = FontFamily.Serif,
-                    fontSize = 20.sp,
-                    color = Color(0xff1F2138)
+                    fontWeight = FontWeight.Bold,
+
                     )
-                
+
+            }
+
+
+            Gamelevels()
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+
+
+                Button(
+                    onClick = {
+                        GlobalVariables.timer.value = 60
+                        GlobalVariables.score.value = 0
+                        navController.navigate("GameScreen") },
+                    colors = ButtonDefaults.buttonColors(Color(0xffF6B17A)),
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier
+                        .absolutePadding(0.dp, 0.dp, 0.dp, 30.dp)
+                        .width(200.dp)
+
+
+                ) {
+                    Text(
+                        text = "Play", style = TextStyle(),
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = FontFamily.Serif,
+                        fontSize = 20.sp,
+                        color = Color(0xff1F2138)
+                    )
+
+                }
             }
         }
     }
-
 }
 @Composable
 fun Gamelevels(){
 var selectedlevel by remember {mutableStateOf("Select game level to play")}
-var Selectedlevelname by remember{ mutableStateOf("")}
+var selectedlevelname by remember{ mutableStateOf("")}
 
     GlobalVariables.selectedlevel = selectedlevel
-    Selectedlevelname = GlobalVariables.selectedlevel
+    selectedlevelname = GlobalVariables.selectedlevel
     // Levels Buttons
 
     Row (modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center){
-        Text(text = Selectedlevelname, style = TextStyle(),
+        Text(text = selectedlevelname, style = TextStyle(),
             fontSize = 20.sp,
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.SemiBold,
@@ -137,8 +163,8 @@ var Selectedlevelname by remember{ mutableStateOf("")}
         ) {
 
             LevelButton("Hard", "Hard", selectedlevel) { selectedlevel = it }
-            val master = "Master\nMore than 10 letters"
-            LevelButton("Master", master, selectedlevel) { selectedlevel = it }
+
+            LevelButton("Master", "Master", selectedlevel) { selectedlevel = it }
         }
 
         Row(
@@ -149,7 +175,7 @@ var Selectedlevelname by remember{ mutableStateOf("")}
             verticalAlignment = Alignment.CenterVertically
         ) {
             LevelButton("Expert", "Expert", selectedlevel) { selectedlevel = it }
-            LevelButton("Impossible", "impossible", selectedlevel) { selectedlevel = it }
+            LevelButton("Impossible", "Impossible", selectedlevel) { selectedlevel = it }
         }
 
 

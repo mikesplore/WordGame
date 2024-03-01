@@ -41,6 +41,20 @@ object GlobalVariables {
     var wrongGuesscount: MutableState<Int> = mutableStateOf(0)
     var skippedguess: MutableState<Int> = mutableStateOf(0)
     var Attempts: MutableState<Int> = mutableStateOf(0)
+    var Version: MutableState<String> = mutableStateOf("1.0.6")
+    var versiontextcolor: MutableState<Color> = mutableStateOf(Color.White)
+    var buttontext: MutableState<String> = mutableStateOf("Check")
+    var selectedword: MutableState<String> = mutableStateOf("anonymous")
+    var username: MutableState<String> = mutableStateOf("")
+    var enteredword: MutableState<String> = mutableStateOf("")
+
+
+
+
+
+
+
+
 
 
 
@@ -74,12 +88,11 @@ fun MyScreens() {
         composable("CategoryScreen") { CategoryScreen(navController) }
         composable("NameScreen") { NameScreen(navController) }
         composable("LevelScreen") { LevelScreen(navController) }
-        composable("HelloScreen/{name}") { backStackEntry ->
-            val name = backStackEntry.arguments?.getString("name") ?: ""
-            HelloScreen(navController, name)
+        composable("HelloScreen") { HelloScreen(navController ) }
+
         }
     }
-}
+
 @Preview
 @Composable
 fun Myscreenpreview(){

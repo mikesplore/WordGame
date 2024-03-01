@@ -1,8 +1,10 @@
 package com.example.mynavigation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -47,11 +49,11 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun NameScreen(navController: NavController){
-    var isVisible by remember { mutableStateOf(true) }
+    val isVisible by remember { mutableStateOf(true) }
     AnimatedVisibility(
         visible = isVisible,
-        enter = fadeIn() + slideInVertically(),
-        exit = fadeOut() + slideOutVertically()
+        enter = fadeIn()+ expandIn(),
+        exit = fadeOut() + slideOutVertically()+ shrinkOut()
     ) {
     Column(modifier = Modifier
         .background(Color(0xff1F2138))
@@ -100,7 +102,6 @@ fun Logo() {//This is the logo
 
 @Composable
 fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Unit) {
-    var username by remember { mutableStateOf("") }
     var entername by remember{ mutableStateOf("Hello, there!")}
 
     Column(
@@ -116,10 +117,10 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
         )}
 
         OutlinedTextField(
-            value = username,
+            value = GlobalVariables.username.value,
             onValueChange = { newUsername ->
                 if (newUsername.all { it.isLetterOrDigit() }) {
-                    username = newUsername
+                    GlobalVariables.username.value = newUsername
                 } else {
                     entername = "Alphanumeric only"
                     GlobalVariables.enterednamecolor.value = Color.Red
@@ -144,9 +145,9 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
         )
         Button(
             onClick = {
-                if (username.trim().isNotEmpty()) {
-                    onNameEntered(username.trim())
-                    navController.navigate("HelloScreen/$username".trim())
+                if (GlobalVariables.username.value.trim().isNotEmpty()) {
+                    onNameEntered(GlobalVariables.username.value.trim())
+                    navController.navigate("HelloScreen")
                 } else {
                     entername = "No username entered"
                     GlobalVariables.enterednamecolor.value = Color.Red
@@ -232,8 +233,6 @@ fun Titlebar() {
 
 
 
-
-
     Box(
         modifier = Modifier
             .height(90.dp)
@@ -255,13 +254,19 @@ fun Titlebar() {
 @Composable
 fun versionNumber(){
     Box(modifier = Modifier.padding(5.dp)){
-        Text(text = "Version 1.0.6",
+        Text(text = GlobalVariables.Version.value,
             style = TextStyle(),
-            fontSize = 15.sp,
+            fontSize = 20.sp,
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Light,
-            color = Color.White
+            color = GlobalVariables.versiontextcolor.value
         )
+    }
+    LaunchedEffect(GlobalVariables.Version.value) {
+        delay(4500)
+        GlobalVariables.Version.value = "\t\t\t\t\t\t\tThis is a Test Version\n" +
+                " Words are not properly sorted!"
+        GlobalVariables.versiontextcolor.value = Color.Red
     }
 }
 

@@ -2,31 +2,38 @@ package com.example.mynavigation
 
 fun getRandomWord(category: String, selectedLevel: String): String {
     return when (selectedLevel.lowercase()) {
-        "beginner" -> beginnerLists[category]?.random() ?: "Invalid category"
-        "medium" -> mediumLists[category]?.random() ?: "Invalid category"
-        // Add more cases for other levels if needed
-        else -> "Invalid level"
+        "beginner" -> beginnerLists[category]?.random() ?: "Start"
+        "medium" -> mediumLists[category]?.random() ?: "Start"
+        else -> "Start"
     }
 }
 
 
-fun beginner(category: String): String {
-    return getRandomWord(category, "beginner")
-}
 
-fun medium(category: String): String {
-    return getRandomWord(category, "medium")
-}
 
 // Lists for beginner level
 private val beginnerLists = mapOf(
     "fruits" to listOf("App", "Ban", "Gra", "Kiw", "Pea", "Plu", "Dat"),
+
+
     "animals" to listOf("Dog", "Cat", "Lion", "Bear", "Wolf", "Fox", "Deer", "Horse", "Cow", "Goat", "Duck", "Swan", "Owl", "Eagle", "Frog", "Snake", "Rat", "Pig"),
+
+
     "countries" to listOf("Peru", "Iraq", "Iran", "Italy", "Fiji", "Ghana", "Japan", "Kenya", "Laos", "Mali", "Naur", "Nepa", "Oman", "Peru", "Togo", "Yeme", "Zamb"),
+
+
     "cars" to listOf("Ford", "Audi", "BMW", "Mini", "Fiat", "Lada", "Lexus", "Acura", "Opel", "Dats", "Tata", "Skod", "Fiat", "Suzuki"),
+
+
     "stationery" to listOf("Pen", "Ruler", "Tape", "Clip", "Note"),
+
+
     "phones" to listOf("Noki", "LG", "Sony", "Mi", "Oppo", "Vivo", "Real", "ASUS", "TCL", "Poco", "Infi", "Sharp", "CAT"),
+
+
     "electronics" to listOf("PC", "TV", "Fan", "Micr", "Oven", "Iron", "Blow", "VCR", "DVD", "CD", "PS4", "Xbox", "Wii", "LED", "LCD"),
+
+
     "computer parts" to listOf("CPU", "GPU", "RAM", "SSD", "Case", "Cool", "Fan", "Heat", "Sink", "Cabl", "Modu", "Switch", "Hub", "UPS")
 )
 
@@ -41,4 +48,8 @@ private val mediumLists = mapOf(
     "electronics" to listOf("Phone", "Laptop", "Tablet", "Watch", "Head", "Speaker", "Drone", "Console", "Mouse", "Drive", "Light", "Cable", "Clock", "Fan", "Iron"),
     "computer parts" to listOf("CPU", "GPU", "RAM", "SSD", "HDD", "Case", "Cool", "Fan", "Card", "Chip", "Port", "Chip", "Hub", "DVD", "WIFI")
 )
+
+//list of hard
+//list of experts
+//other lists
 

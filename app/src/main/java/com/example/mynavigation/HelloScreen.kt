@@ -1,8 +1,10 @@
 package com.example.mynavigation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -41,12 +43,12 @@ import androidx.navigation.compose.rememberNavController
 import java.util.Locale
 
 @Composable
-fun HelloScreen(navController: NavController, name: String){
+fun HelloScreen(navController: NavController){
     var isVisible by remember { mutableStateOf(true) }
     AnimatedVisibility(
         visible = isVisible,
-        enter = fadeIn() + slideInVertically(),
-        exit = fadeOut() + slideOutVertically()
+        enter = fadeIn()+ expandIn(),
+        exit = fadeOut() + slideOutVertically()+ shrinkOut()
     ) {
         Column(
             modifier = Modifier
@@ -55,8 +57,8 @@ fun HelloScreen(navController: NavController, name: String){
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Greetings(displayName = name)
-            NameProfile(name = name)
+            Greetings(displayName = GlobalVariables.username.value)
+            NameProfile(name = GlobalVariables.username.value)
             Ruleclick(navController = navController)
             ProceedToGameButton(navController = navController)
         }
@@ -158,5 +160,5 @@ fun NameProfile(name: String) {
 @Preview(heightDp = 850)
 @Composable
 fun HelloScreenPreview(){
-    HelloScreen(navController = rememberNavController(),"Mike")
+    HelloScreen(navController = rememberNavController())
 }
