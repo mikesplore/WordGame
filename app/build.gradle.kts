@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.wordgame"
+    namespace = "com.mike.wordgame"
     compileSdk = 34
 
     defaultConfig {

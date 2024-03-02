@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mike.wordgame.ui.theme.MyNavigationTheme
+import com.mike.wordgame.ui.theme.WordGameTheme
 
 object GlobalVariables {
     var outcome: MutableState<String> = mutableStateOf("Outcome")
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyNavigationTheme  {
+            WordGameTheme  {
                 Scaffold(modifier = Modifier
                     .background(Color(0xffffffff), shape = RoundedCornerShape(20.dp))
                     .fillMaxSize()) {
