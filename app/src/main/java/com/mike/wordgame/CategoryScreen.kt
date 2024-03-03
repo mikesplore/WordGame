@@ -1,6 +1,11 @@
 package com.mike.wordgame
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,11 +19,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,9 +37,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextMotion
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,6 +72,7 @@ fun CategorySCreen(navController: NavController) {
     GlobalVariables.selectedcategory=selectedCategory
     SelectedCategoryname = GlobalVariables.selectedcategory
 
+
     Column(
         modifier = Modifier
             .background(Color(0xff1F2138))
@@ -67,39 +80,26 @@ fun CategorySCreen(navController: NavController) {
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         // Header
-        Box(
-            modifier = Modifier
-                .background(Color(0xff1F2138))
-                .absolutePadding(0.dp, 20.dp)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "CATEGORY",
-                style = TextStyle(
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 50.sp,
-                    fontFamily = FontFamily.Serif,
-                    color = Color.White
-                )
-            )
-        }
+            Row(modifier= Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
+                NameProfile(name = GlobalVariables.username.value, navController = navController, sizee = 70.dp)
+                Text(text = "CATEGORY",
+                    style = TextStyle(
+                        fontSize = 45.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontFamily = FontFamily.Serif)
+                    )
+            }
 
         // Select a Category Text
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = SelectedCategoryname.capitalize(Locale.ROOT),
-                style = TextStyle(
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    fontFamily = FontFamily.Serif
-                )
-            )
+        Row(modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+            TypewriterText(texts = listOf(
+                "$SelectedCategoryname"
+            ), fontSize = 30.sp)
         }
+
+
 
         // Categories Buttons
         Column(
@@ -206,8 +206,37 @@ fun CategoryButton(
     }
 }
 
+@Composable
+fun hellostyle(name:String){
+val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
+val scale by infiniteTransition.animateFloat(
+    initialValue = 1f,
+    targetValue = 8f,
+    animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse),
+    label = "scale"
+)
+Box(modifier = Modifier
+    .fillMaxWidth()
+    .height(50.dp)) {
+    Text(
+        text = name,
 
+        modifier = Modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+                transformOrigin = TransformOrigin.Center
+            }
+            .align(Alignment.Center),
+        // Text composable does not take TextMotion as a parameter.
+        // Provide it via style argument but make sure that we are copying from current theme
+        style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated),
+        color = Color.White,
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = FontFamily.Serif,
 
+    )
+}}
 
 
 
@@ -224,5 +253,4 @@ fun CategoryButton(
 @Preview()
 @Composable
 fun CategoryScreenPreview(){
-    CategoryScreen(navController = rememberNavController())
-}
+CategoryScreen(navController = rememberNavController())}

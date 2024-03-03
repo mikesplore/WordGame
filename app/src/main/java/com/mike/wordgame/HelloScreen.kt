@@ -6,7 +6,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,95 +24,53 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import java.util.Locale
 
+
 @Composable
 fun HelloScreen(navController: NavController){
-    var isVisible by remember { mutableStateOf(true) }
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = fadeIn()+ expandIn(),
-        exit = fadeOut() + slideOutVertically()+ shrinkOut()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xff1F2138)),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Greetings(displayName = GlobalVariables.username.value)
-            NameProfile(name = GlobalVariables.username.value)
-            Ruleclick(navController = navController)
-            ProceedToGameButton(navController = navController)
-        }
-    }
-}
-@Composable
-fun Greetings(displayName: String) {
-    Box(
-        modifier = Modifier
-            .padding(top = 30.dp)
-            .height(150.dp)
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "Hello ${displayName.capitalize(Locale.ROOT)}!",
-            style = TextStyle(
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 50.sp,
-                color = Color.White,
-                fontFamily = FontFamily.Serif,
-                textAlign = TextAlign.Center
-            ),
-            maxLines = 2, // Ensure the text stays on a single line
-            overflow = TextOverflow.Ellipsis, // Add ellipsis if the text overflows
-            softWrap = true // Disable text wrapping
+    var username = GlobalVariables.username.value
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(Color(0xff1F2138)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly) {
+
+
+        hellostyle(name = GlobalVariables.username.value)
+
+        TypewriterText(
+            texts = listOf(
+
+                "Tap the Image to change avatar"
+            ), fontSize = 20.sp
         )
-        GlobalVariables.thanksname.value = displayName
-    }
-}
+        NameProfile(name = username, navController, sizee = 270.dp)
 
-
-@Composable
-fun Ruleclick(navController: NavController) {
-
-    Button(
-        onClick = {
-            navController.navigate("CategoryScreen")
-        },
-        colors = ButtonDefaults.buttonColors(Color.Transparent),
-        modifier = Modifier
-            .height(50.dp)
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(50.dp)
-    ) {
-        Text(
-            text = "",
-            style = TextStyle(),
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 25.sp,
-            fontFamily = FontFamily.Serif,
-            color = Color.White
-        )
+        ProceedToGameButton(navController = navController)
     }
 }
 
@@ -126,29 +86,59 @@ fun ProceedToGameButton(navController: NavController){
         shape = RoundedCornerShape(10.dp)) {
         Text(text = "Go to Category",style = TextStyle(), fontSize = 20.sp, fontFamily = FontFamily.Serif,color=Color.Black, fontWeight = FontWeight.Bold)
     }
-}
+} //2130968591
 
 @Composable
-fun NameProfile(name: String) {
-    val first = name.first()
+fun NameProfile(name: String, navController: NavController, sizee: Dp) {
+    val selectedAvatar = /*2130968591*/ GlobalVariables.selectedAvatar
+    var clickable by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .background(Color(0xff7077A1), shape = CircleShape)
-            .size(270.dp),
+            .clip(RoundedCornerShape(10.dp))
+            .clickable {
+                // Set clickable to true when clicked
+                clickable = true
+            }
+            .size(sizee),
         contentAlignment = Alignment.Center
     ) {
-        val text = first.toString()
-        Text(
-            text = text.uppercase(),
-            style = TextStyle(),
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 150.sp,
-            color = Color.White,
-            fontFamily = FontFamily.Serif,
+        selectedAvatar?.let { avatarResource ->
+            // Display the selected avatar image if available
+            Image(
+                painter = painterResource(id = avatarResource),
+                contentDescription = "Avatar Image",
+                modifier = Modifier
+                    .size(sizee)
+                    .clip(CircleShape)
+            )
+        } ?: run {
+            // If no avatar is selected, display the first letter of the name
+            val first = name.first().toString().uppercase()
+            Text(
+                text = first,
+                style = TextStyle(
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 150.sp,
+                    color = Color.White,
+                    fontFamily = FontFamily.Serif
+                )
+            )
+        }
+    }
 
-        )
+    // Navigate to AvatarScreen when the box containing the avatar is clicked
+    LaunchedEffect(clickable) {
+        if (clickable) {
+            navController.navigate("AvatarScreen")
+        }
     }
 }
+
+
+
+
 
 
 

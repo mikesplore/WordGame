@@ -1,12 +1,21 @@
 package com.mike.wordgame
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FiniteAnimationSpec
+
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOut
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +26,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -31,7 +41,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -39,11 +52,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
+
+
 
 @Composable
 fun NameScreen(navController: NavController){
@@ -59,7 +75,7 @@ fun NameScreen(navController: NavController){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly){
         Titlebar()
-        versionNumber()
+        TypewriterTextSample()
         Logo()
 
         NameEntryScreen(navController = navController) {
@@ -69,43 +85,16 @@ fun NameScreen(navController: NavController){
 }}
 
 @Composable
-fun Logo() {//This is the logo
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .size(200.dp)
-                .background(Color(0xff424769), shape = RoundedCornerShape(20.dp)),
-
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "WG",
-                style = TextStyle(),
-                fontSize = 105.sp,
-                fontFamily = FontFamily.Serif,
-                color = Color(0xffF6B17A),
-                fontWeight = FontWeight.Bold,
-
-            )
-        }
-    }
-
-}
-
-@Composable
 fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Unit) {
     var entername by remember{ mutableStateOf("Hello, there!")}
+    var clicked by remember { mutableStateOf(false )}
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .height(if (clicked) 170.dp else 40.dp)
+            .padding(horizontal = 16.dp)
+            .clickable { clicked = !clicked }, // Toggle clicked state when clicked
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(modifier = Modifier){
@@ -145,7 +134,7 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
             onClick = {
                 if (GlobalVariables.username.value.trim().isNotEmpty()) {
                     onNameEntered(GlobalVariables.username.value.trim())
-                    navController.navigate("HelloScreen")
+                    navController.navigate("AvatarScreen")
                 } else {
                     entername = "No username entered"
                     GlobalVariables.enterednamecolor.value = Color.Red
@@ -161,6 +150,7 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
         }
 
     }
+
     LaunchedEffect(entername){
         delay(1000)
         entername = "Enter your username"
@@ -250,27 +240,126 @@ fun Titlebar() {
 }
 
 @Composable
-fun versionNumber(){
-    Box(modifier = Modifier.padding(5.dp)){
-        Text(text = GlobalVariables.Version.value,
-            style = TextStyle(),
-            fontSize = 20.sp,
-            fontFamily = FontFamily.Serif,
-            fontWeight = FontWeight.Light,
-            color = GlobalVariables.versiontextcolor.value
+fun TypewriterTextSample() {
+    Column() {
+        TypewriterText(
+            texts = listOf(
+
+                "This is a Test Version!",
+                "Tap the instruction to enter your name"
+            ), fontSize = 16.sp
         )
-    }
-    LaunchedEffect(GlobalVariables.Version.value) {
-        delay(4500)
-        GlobalVariables.Version.value = "\t\t\t\t\t\t\tThis is a Test Version\n" +
-                " Words are not properly sorted!"
-        GlobalVariables.versiontextcolor.value = Color.Red
     }
 }
 
+@Composable
+fun TypewriterText(
+    texts: List<String>,
+    fontSize: TextUnit, // Add fontSize parameter
+) {
+    var textIndex by remember {
+        mutableStateOf(0)
+    }
+    var textToDisplay by remember {
+        mutableStateOf("")
+    }
+
+    LaunchedEffect(
+        key1 = texts,
+    ) {
+        while (textIndex < texts.size) {
+            texts[textIndex].forEachIndexed { charIndex, _ ->
+                textToDisplay = texts[textIndex]
+                    .substring(
+                        startIndex = 0,
+                        endIndex = charIndex + 1,
+                    )
+                delay(100)
+            }
+            textIndex = (textIndex + 1) % texts.size
+            delay(1000)
+        }
+    }
+
+    Text(
+        text = textToDisplay,
+        fontSize = fontSize, // Use fontSize parameter
+        fontWeight = FontWeight.Bold,
+        fontFamily = FontFamily.Serif,
+        color = Color.White
+    )
+}
+
+
+
+@Composable
+fun Logo() {
+    // Define a list of image resources
+    val images = listOf(
+        R.drawable.images1,
+        R.drawable.images2,
+        R.drawable.images3,
+        R.drawable.images4,
+        R.drawable.images5
+
+    )
+
+    // Keep track of the current index to select the image from the list
+    var imageIndex by remember { mutableStateOf(0) }
+
+    var isVisible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(isVisible) {
+        if (isVisible) {
+            // Delay for 3 seconds before toggling visibility
+            delay(3000)
+            isVisible = false
+        } else {
+            // Delay for 1 second before showing the next image
+            delay(1000)
+            // Change the image index to select the next image
+            imageIndex = (imageIndex + 1) % images.size
+            isVisible = true
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .clickable {
+                // When the box is clicked, increment the image index
+                imageIndex = (imageIndex + 1) % images.size
+            }
+            .background(color = Color.Transparent, shape = RoundedCornerShape(10.dp))
+            .size(300.dp)
+            .padding(16.dp)
+    ) {
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = fadeIn() + slideInHorizontally(),
+            exit = fadeOut() + slideOutHorizontally()
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Transparent, shape = RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(10.dp)), // Clip the box with rounded corners
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = images[imageIndex]),
+                    contentDescription = "Images",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+    }
+}
 
 @Preview(heightDp = 850)
 @Composable
 fun NameScreenPreview(){
     NameScreen(navController = rememberNavController())
 }
+
+

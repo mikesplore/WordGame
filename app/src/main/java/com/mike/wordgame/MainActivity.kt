@@ -11,10 +11,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.composable
@@ -47,6 +50,8 @@ object GlobalVariables {
     var selectedword: MutableState<String> = mutableStateOf("anonymous")
     var username: MutableState<String> = mutableStateOf("")
     var enteredword: MutableState<String> = mutableStateOf("")
+    var selectedAvatar: Int? = null
+
 
 
 
@@ -89,6 +94,8 @@ fun MyScreens() {
         composable("NameScreen") { NameScreen(navController) }
         composable("LevelScreen") { LevelScreen(navController) }
         composable("HelloScreen") { HelloScreen(navController ) }
+        composable("AvatarScreen") { AvatarScreen(navController ) }
+
 
         }
     }

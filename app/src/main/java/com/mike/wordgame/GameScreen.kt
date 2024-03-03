@@ -47,8 +47,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.delay
-
-
+import java.io.FileOutputStream
+import java.io.IOException
+import android.content.Context
+import android.widget.Toast
 
 
 import java.util.Locale
@@ -497,4 +499,35 @@ fun showCorrectLetters(actualWord: String, guessedWord: String): String {
         }
     }
     return result.trim().lowercase()
+}
+
+//functions to store  and retrieve high score
+fun saveDataToInternalStorageOverride(context: Context, message: String) {
+    try {
+        val fos: FileOutputStream =
+            context.openFileOutput("demoFile.txt", Context.MODE_PRIVATE) // Open file in private mode to override existing data
+        fos.write(message.toByteArray())
+        fos.write("\n".toByteArray()) // Add a newline character to separate entries
+        fos.flush()
+        fos.close()
+        Toast.makeText(context, "Data saved successfully..", Toast.LENGTH_SHORT).show()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        Toast.makeText(context, "Error saving data", Toast.LENGTH_SHORT).show()
+    }
+}
+
+fun saveDataToInternalStorageAppend(context: Context, message: String) {
+    try {
+        val fos: FileOutputStream =
+            context.openFileOutput("demoFile.txt", Context.MODE_APPEND) // Open file in append mode to add to existing data
+        fos.write(message.toByteArray())
+        fos.write("\n".toByteArray()) // Add a newline character to separate entries
+        fos.flush()
+        fos.close()
+        Toast.makeText(context, "Data saved successfully..", Toast.LENGTH_SHORT).show()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        Toast.makeText(context, "Error saving data", Toast.LENGTH_SHORT).show()
+    }
 }
