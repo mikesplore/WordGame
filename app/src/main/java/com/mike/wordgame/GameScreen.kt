@@ -51,16 +51,12 @@ import java.io.FileOutputStream
 import java.io.IOException
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.io.BufferedReader
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.FileInputStream
-import java.io.InputStreamReader
-
-
 import java.util.Locale
 
 @Composable
@@ -123,9 +119,6 @@ fun Gamescreen(navController: NavController) {
                     GlobalVariables.outcome.value = "Time is UP!"
                     GlobalVariables.outcomeColor.value = Color.Red
 
-
-
-
                     break
                 }
             }
@@ -164,42 +157,26 @@ fun Gamescreen(navController: NavController) {
            )
         }
 
-        Row(
-            modifier = Modifier
-                .height(70.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-                val hintcolor = GlobalVariables.hintcolor.value
-                Row (modifier = Modifier
-                    .width(250.dp)
-                    .height(70.dp)
-                    .background(color = hintcolor, shape = RoundedCornerShape(10.dp)),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically){
-
-                    Text(text =GlobalVariables.hint.value, style = TextStyle(),
-                        fontFamily = FontFamily.Serif,
-                        fontSize = 20.sp,
-                        color = Color.White,
-
-                   )
-                }
-            }
-        }
 
         //outcome box
+
+        Column (modifier = Modifier
+            .height(200.dp)
+            .background(Color(0xff424769), shape = RoundedCornerShape(20.dp))
+            .fillMaxWidth(),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally){
+
+
         Button(onClick = {
                         navController.navigate("Usernames")
 
         },
             modifier = Modifier
-                .width(270.dp)
-                .height(70.dp),
-            shape = RoundedCornerShape(10.dp),
+                .width(430.dp)
+                .height(85.dp),
+            shape = RectangleShape,
+
             colors = ButtonDefaults.buttonColors(GlobalVariables.outcomeColor.value)
                 
         ) {
@@ -211,14 +188,57 @@ fun Gamescreen(navController: NavController) {
                 )
             
         }
+            Row (modifier = Modifier
+                .height(85.dp)
+                .background(color = GlobalVariables.hintbackground.value)
+                .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center){
+                Text(text =GlobalVariables.hint.value,
+                    style = TextStyle(),
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 40.sp,
+                    color = Color.Black)
+
+
+            }
+
+            Row (modifier = Modifier
+                .height(25.dp)
+                .background(color = Color(0xff7077A1), shape = RoundedCornerShape(20.dp))
+                .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center){
+                TypewriterText(
+                    texts = listOf(
+
+                        "Happy Gaming!",
+                        "Tap the Timer to restart game",
+                        "Some words are not properly arranged",
+                        "Words category is shown above",
+                        "Answer button will deduct 3 seconds",
+                        "Skip button will deduct 2 seconds",
+                        "Correct guess adds 10 seconds",
+                        "Tap outcome to reset H-score and profile"
+                    ), fontSize = 16.sp
+                )
+                
+
+            }
+
+
+
+
+        }
 
 
         Box(
             modifier = Modifier
-                .height(150.dp)
+                .height(200.dp)
                 .padding(20.dp)
                 .background(Color(0xff424769), shape = RoundedCornerShape(10.dp))
-                .width(350.dp),
+                .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
             Column (horizontalAlignment = Alignment.CenterHorizontally,
@@ -258,6 +278,7 @@ fun Gamescreen(navController: NavController) {
                     GlobalVariables.outcomeColor.value = Color(0xff1e8a37)
                     GlobalVariables.hint.value = GlobalVariables.word.value
                     GlobalVariables.hintcolor.value = Color(0xff1e8a37)
+                    GlobalVariables.hintbackground.value = Color(0xffF6B17A)
                     GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory, GlobalVariables.selectedlevel)
                     GlobalVariables.timer.value+=10
                     GlobalVariables.correctGuesscount.value+=1
@@ -299,6 +320,7 @@ fun Gamescreen(navController: NavController) {
             GlobalVariables.buttontext.value,
             GlobalVariables.outcomeColor.value,
             GlobalVariables.hint.value,
+            GlobalVariables.hintbackground.value
 
 
             )
@@ -306,6 +328,7 @@ fun Gamescreen(navController: NavController) {
             // Wait for the outcome to change
             delay(2000) // Delay for 2000 milliseconds (2 seconds)
             // After 2 seconds, reset the outcome to "Check"
+                    GlobalVariables.hintbackground.value = Color.Transparent
             GlobalVariables.outcome.value = "Outcome"
             GlobalVariables.buttontext.value = "Check"
             GlobalVariables.outcomeColor.value = Color(0xff424769)

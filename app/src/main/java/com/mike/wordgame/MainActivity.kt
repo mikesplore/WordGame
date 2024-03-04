@@ -35,7 +35,7 @@ object GlobalVariables {
     var hint: MutableState<String> = mutableStateOf("")
     var selectedcategory: String = "Mike"
     var selectedlevel: String = "easy"
-    var word: MutableState<String> = mutableStateOf(getRandomWord(selectedcategory,GlobalVariables.selectedlevel))
+    var word: MutableState<String> = mutableStateOf(getRandomWord(selectedcategory, selectedlevel))
     var timer: MutableState<Int> = mutableStateOf(60)
     var timerRunning: MutableState<Boolean> = mutableStateOf(true)
     var enterednamecolor: MutableState<Color> = mutableStateOf(Color.White)
@@ -44,13 +44,13 @@ object GlobalVariables {
     var wrongGuesscount: MutableState<Int> = mutableStateOf(0)
     var skippedguess: MutableState<Int> = mutableStateOf(0)
     var Attempts: MutableState<Int> = mutableStateOf(0)
-    var Version: MutableState<String> = mutableStateOf("1.0.6")
-    var versiontextcolor: MutableState<Color> = mutableStateOf(Color.White)
     var buttontext: MutableState<String> = mutableStateOf("Check")
-    var selectedword: MutableState<String> = mutableStateOf("anonymous")
     var username: MutableState<String> = mutableStateOf("")
     var enteredword: MutableState<String> = mutableStateOf("")
     var selectedAvatar: Int? = null
+    var prevoiusword: MutableState<String> = mutableStateOf("")
+    var hintbackground: MutableState<Color> = mutableStateOf(Color(0x00FFFFFF))
+
 
 
 

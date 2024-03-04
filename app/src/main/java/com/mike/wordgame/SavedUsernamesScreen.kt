@@ -123,7 +123,7 @@ fun SavedUsernames(navController: NavController) {
 
             Button(
                 onClick = {
-                    cleanFile(context = context)
+                    cleanusernameFile(context = context)
                 },
                 modifier = Modifier
                     .padding(top = 30.dp)
@@ -132,6 +132,26 @@ fun SavedUsernames(navController: NavController) {
             ) {
                 Text(
                     "Clear",
+                    style = TextStyle(
+                        fontFamily = FontFamily.Serif,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+                        color = Color.Black
+                    )
+                )
+            }
+
+            Button(
+                onClick = {
+                    cleanHighScoreFile(context = context)
+                },
+                modifier = Modifier
+                    .padding(top = 30.dp)
+                    .align(Alignment.CenterHorizontally),
+                colors = ButtonDefaults.buttonColors(Color(0xffF6B17A))
+            ) {
+                Text(
+                    "Clear H-Score",
                     style = TextStyle(
                         fontFamily = FontFamily.Serif,
                         fontWeight = FontWeight.SemiBold,
@@ -158,7 +178,6 @@ fun saveNameToFile(context: Context, name: String) {
             context.openFileOutput("usernameFile.txt", Context.MODE_APPEND) // Open file in append mode
         fos.write("$name\n".toByteArray()) // Add a newline character to separate entries
         fos.close()
-        Toast.makeText(context, "Username saved successfully", Toast.LENGTH_SHORT).show()
     } catch (e: Exception) {
         e.printStackTrace()
         Toast.makeText(context, "Error saving username", Toast.LENGTH_SHORT).show()
@@ -184,20 +203,26 @@ fun readNameFile(context: Context): List<String> {
 }
 
 //clear the names file
-fun cleanFile(context: Context) {
+fun cleanusernameFile(context: Context) {
     try {
         val file = File(context.filesDir,"usernameFile.txt")
-        file.writeText("") // Write an empty string to clear the file
-        println("File cleaned successfully.")
-    } catch (e: Exception) {
+        file.writeText("")
+        Toast.makeText(context, "File cleared successfully.", Toast.LENGTH_SHORT).show()    } catch (e: Exception) {
         e.printStackTrace()
-        println("Error cleaning the file.")
-    }
+        Toast.makeText(context, "Error cleaning file", Toast.LENGTH_SHORT).show()    }
 }
 
+fun cleanHighScoreFile(context: Context) {
+    try {
+        val file = File(context.filesDir,"HighScore.txt")
+        file.writeText("")
+        Toast.makeText(context, "File cleared successfully.", Toast.LENGTH_SHORT).show()    } catch (e: Exception) {
+        e.printStackTrace()
+        Toast.makeText(context, "Error cleaning file", Toast.LENGTH_SHORT).show()    }
+}
 @Preview
 @Composable
-fun preview(){
+fun Preview(){
     SavedUsernames(navController = rememberNavController())
 }
 

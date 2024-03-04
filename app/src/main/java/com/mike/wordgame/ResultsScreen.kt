@@ -285,7 +285,7 @@ fun Thanksbox(){
         .background(Color(0xff424769), shape = RoundedCornerShape(10.dp))
         .width(300.dp),
         contentAlignment = Alignment.Center){
-        Text(text = "Thanks for playing, ${GlobalVariables.thanksname.value.capitalize(Locale.ROOT)}", style = TextStyle(),
+        Text(text = "Thanks for playing, ${GlobalVariables.username.value.capitalize(Locale.ROOT)}", style = TextStyle(),
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Serif,
             fontSize = 16.sp,

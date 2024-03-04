@@ -1,18 +1,11 @@
 package com.mike.wordgame
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FiniteAnimationSpec
-
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
-import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOut
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
@@ -21,14 +14,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,6 +29,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -61,8 +53,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
-import java.io.FileOutputStream
-import java.io.IOException
+
 
 
 @Composable
@@ -90,52 +81,56 @@ fun NameScreen(navController: NavController){
 
 @Composable
 fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Unit) {
-    var entername by remember{ mutableStateOf("Hello, there!")}
+    var entername by remember { mutableStateOf("Hello, there!")}
     var clicked by remember { mutableStateOf(false )}
+    var textcolor by remember{(mutableStateOf(Color.White))}
     val context = LocalContext.current
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(if (clicked) 170.dp else 40.dp)
+            .height(if (clicked) 190.dp else 35.dp)
             .padding(horizontal = 16.dp)
             .clickable { clicked = !clicked }, // Toggle clicked state when clicked
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom
     ) {
-        Box(modifier = Modifier){
+        // Display the text "Hello there" always
         Text(
             text = entername,
-            style = TextStyle(color = GlobalVariables.enterednamecolor.value, fontSize = 30.sp, fontFamily = FontFamily.Serif)
-        )}
-
-        OutlinedTextField(
-            value = GlobalVariables.username.value,
-            onValueChange = { newUsername ->
-                if (newUsername.all { it.isLetterOrDigit() }) {
-                    GlobalVariables.username.value = newUsername
-
-                } else {
-                    entername = "Alphanumeric only"
-                    GlobalVariables.enterednamecolor.value = Color.Red
-                }
-            },
-
-            textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
-            label = { Text("Name", style = TextStyle(), color = Color.White, fontFamily = FontFamily.Serif) },
-            modifier = Modifier
-                .width(220.dp)
-                .padding(top = 16.dp, bottom = 8.dp),
-            singleLine = true,
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = Color(0xff7077A1),
-                focusedContainerColor = Color(0xff7077A1),
-                cursorColor = Color.Black,
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black
-            ),
-            shape = RoundedCornerShape(10.dp)
-
+            style = TextStyle(color =textcolor, fontSize = 30.sp, fontFamily = FontFamily.Serif)
         )
+
+        // Display the text input field only when clicked is true
+        if (clicked) {
+            OutlinedTextField(
+                value = GlobalVariables.username.value,
+                onValueChange = { newUsername ->
+                    if (newUsername.all { it.isLetterOrDigit() }) {
+                        GlobalVariables.username.value = newUsername
+                    } else {
+                        entername = "Alphanumeric only"
+                        textcolor = Color.Red
+
+                    }
+                },
+                textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
+                label = { Text("Name", style = TextStyle(), color = Color.White, fontFamily = FontFamily.Serif) },
+                modifier = Modifier
+                    .width(220.dp)
+                    .padding(top = 16.dp, bottom = 8.dp),
+                singleLine = true,
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = Color(0xff7077A1),
+                    focusedContainerColor = Color(0xff7077A1),
+                    cursorColor = Color.Black,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                ),
+                shape = RoundedCornerShape(10.dp)
+            )
+        }
+
         Button(
             onClick = {
                 if (GlobalVariables.username.value.trim().isNotEmpty()) {
@@ -144,9 +139,7 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
                     navController.navigate("AvatarScreen")
                 } else {
                     entername = "No username entered"
-                    GlobalVariables.enterednamecolor.value = Color.Red
-
-
+                    textcolor = Color.Red
                 }
             },
             modifier = Modifier.width(150.dp),
@@ -155,27 +148,27 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
         ) {
             Text(text = "Continue", style = TextStyle(), fontFamily = FontFamily.Serif, color = Color.Black, fontWeight = FontWeight.Bold)
         }
-
     }
 
-    LaunchedEffect(entername){
-        delay(1000)
-        entername = "Enter your username"
-        GlobalVariables.enterednamecolor.value = Color.White
-
+    LaunchedEffect(entername) {
+        delay(2000)
+        textcolor = Color.White
+        entername = "Enter your name"
     }
 }
 
+
+
 @Composable
 fun Titlebar() {
-    var wlettercolor by remember { mutableStateOf(0xff00ffffff)}
-    var olettercolor by remember { mutableStateOf(0xff00ffffff)}
-    var rlettercolor by remember { mutableStateOf(0xff00ffffff)}
-    var dlettercolor by remember { mutableStateOf(0xff00ffffff)}
-    var glettercolor by remember { mutableStateOf(0xff00ffffff)}
-    var alettercolor by remember { mutableStateOf(0xff00ffffff)}
-    var mlettercolor by remember { mutableStateOf(0xff00ffffff)}
-    var elettercolor by remember { mutableStateOf(0xff00ffffff)}
+    var wlettercolor by remember { mutableLongStateOf(0xff00ffffff)}
+    var olettercolor by remember { mutableLongStateOf(0xff00ffffff) }
+    var rlettercolor by remember { mutableLongStateOf(0xff00ffffff) }
+    var dlettercolor by remember { mutableLongStateOf(0xff00ffffff) }
+    var glettercolor by remember { mutableLongStateOf(0xff00ffffff) }
+    var alettercolor by remember { mutableLongStateOf(0xff00ffffff) }
+    var mlettercolor by remember { mutableLongStateOf(0xff00ffffff)}
+    var elettercolor by remember { mutableLongStateOf(0xff00ffffff) }
 
     val titledescription = buildAnnotatedString {
         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = Color(wlettercolor), fontSize = 80.sp)) {
