@@ -95,6 +95,7 @@ fun MyScreens() {
         composable("LevelScreen") { LevelScreen(navController) }
         composable("HelloScreen") { HelloScreen(navController ) }
         composable("AvatarScreen") { AvatarScreen(navController ) }
+        composable("Usernames") { SavedUsernames(navController) }
 
 
         }

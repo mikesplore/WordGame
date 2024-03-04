@@ -51,6 +51,14 @@ import java.io.FileOutputStream
 import java.io.IOException
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.BufferedReader
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.FileInputStream
+import java.io.InputStreamReader
 
 
 import java.util.Locale
@@ -185,11 +193,11 @@ fun Gamescreen(navController: NavController) {
 
         //outcome box
         Button(onClick = {
-                        
+                        navController.navigate("Usernames")
 
         },
             modifier = Modifier
-                .width(250.dp)
+                .width(270.dp)
                 .height(70.dp),
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(GlobalVariables.outcomeColor.value)
@@ -254,6 +262,7 @@ fun Gamescreen(navController: NavController) {
                     GlobalVariables.timer.value+=10
                     GlobalVariables.correctGuesscount.value+=1
                     GlobalVariables.Attempts.value+=1
+
                 } else {
                     GlobalVariables.outcomeColor.value = Color(0xffb80d0d)
                     GlobalVariables.wrongGuesscount.value+=1
@@ -271,6 +280,7 @@ fun Gamescreen(navController: NavController) {
                         GlobalVariables.outcomeColor.value = Color.Red
                         GlobalVariables.outcome.value  = "Restart the game"
                     }
+
                       },modifier = Modifier,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(Color(0xffF6B17A))
@@ -360,20 +370,65 @@ fun TimerBox() {
 
 @Composable
 fun HighScoreBox() {
-    if (GlobalVariables.score.value>GlobalVariables.high_score.value){
-        GlobalVariables.high_score.value = GlobalVariables.score.value
+
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+
+        GlobalVariables.high_score.value = getIntFromInternalStorage(context)
+
     }
-    Box(modifier = Modifier
-        .size(100.dp)
-        .background(Color(0xff424769), shape = RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center){
-        Column (modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally){
-            Text(text = "H-Score", style = TextStyle(), fontSize = 20.sp, fontFamily = FontFamily.Serif,color= Color.White, fontWeight = FontWeight.Bold)
-            Text(text = "${GlobalVariables.high_score.value}", style = TextStyle(), fontSize = 20.sp, fontFamily = FontFamily.Serif,color= Color.White, fontWeight = FontWeight.Bold)
 
+
+     // Update the high score if the current score is greater
+    if (GlobalVariables.score.value > GlobalVariables.high_score.value) {
+        saveIntToInternalStorage(context,GlobalVariables.score.value)
+    }
+/*
+    // Retrieve the high score from internal storage
+    val highScore = getHighScoreFromInternalStorage(context)
+*/
+    // Display the high score in a box
+
+    Box(
+
+        modifier = Modifier
+            .size(100.dp)
+            .background(Color(0xff424769), shape = RoundedCornerShape(10.dp)),
+        contentAlignment = Alignment.Center
+    ) {
+
+        Column(
+            modifier = Modifier,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+
+            Text(
+                text = "H-Score",
+                style = TextStyle(),
+                fontSize = 20.sp,
+                fontFamily = FontFamily.Serif,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = "${GlobalVariables.high_score.value}", // Display the retrieved high score
+                style = TextStyle(),
+                fontSize = 20.sp,
+                fontFamily = FontFamily.Serif,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
         }
-
     }
 }
+
+// Call this function to save the high score to internal storage
+
+
+// Function to get high score from internal storage
+
 
 
 
@@ -501,33 +556,37 @@ fun showCorrectLetters(actualWord: String, guessedWord: String): String {
     return result.trim().lowercase()
 }
 
-//functions to store  and retrieve high score
-fun saveDataToInternalStorageOverride(context: Context, message: String) {
+// Function to save data to internal storage
+fun saveIntToInternalStorage(context: Context, value: Int) {
     try {
-        val fos: FileOutputStream =
-            context.openFileOutput("demoFile.txt", Context.MODE_PRIVATE) // Open file in private mode to override existing data
-        fos.write(message.toByteArray())
-        fos.write("\n".toByteArray()) // Add a newline character to separate entries
-        fos.flush()
+        val fos: FileOutputStream = context.openFileOutput("HighScore.txt", Context.MODE_PRIVATE)
+        val dataOutputStream = DataOutputStream(fos)
+        dataOutputStream.writeInt(value)
+        dataOutputStream.close()
         fos.close()
-        Toast.makeText(context, "Data saved successfully..", Toast.LENGTH_SHORT).show()
     } catch (e: IOException) {
         e.printStackTrace()
-        Toast.makeText(context, "Error saving data", Toast.LENGTH_SHORT).show()
+        // Handle the error, e.g., show a toast message
+        Toast.makeText(context, "Error saving score", Toast.LENGTH_SHORT).show()
+
     }
+}
+fun getIntFromInternalStorage(context: Context): Int {
+    var value = 0 // Default value if the file or data is not found
+    try {
+        val fis: FileInputStream = context.openFileInput("HighScore.txt")
+        val dataInputStream = DataInputStream(fis)
+        value = dataInputStream.readInt()
+        dataInputStream.close()
+        fis.close()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        // Handle the error, e.g., show a toast message
+        Toast.makeText(context, "Error parsing high score", Toast.LENGTH_SHORT).show()
+
+    }
+    return value
 }
 
-fun saveDataToInternalStorageAppend(context: Context, message: String) {
-    try {
-        val fos: FileOutputStream =
-            context.openFileOutput("demoFile.txt", Context.MODE_APPEND) // Open file in append mode to add to existing data
-        fos.write(message.toByteArray())
-        fos.write("\n".toByteArray()) // Add a newline character to separate entries
-        fos.flush()
-        fos.close()
-        Toast.makeText(context, "Data saved successfully..", Toast.LENGTH_SHORT).show()
-    } catch (e: IOException) {
-        e.printStackTrace()
-        Toast.makeText(context, "Error saving data", Toast.LENGTH_SHORT).show()
-    }
-}
+
+

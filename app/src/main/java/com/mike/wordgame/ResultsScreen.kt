@@ -23,6 +23,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,6 +59,11 @@ fun GameSummaryScreen(navController: NavController){
 @Composable
 fun ResultScreen(navController: NavController) {
     val context = LocalContext.current
+    LaunchedEffect(Unit) {
+
+        GlobalVariables.high_score.value = getIntFromInternalStorage(context)
+
+    }
 
     // Constants for button colors
     val buttonBackgroundColor = Color(0xffF6B17A)

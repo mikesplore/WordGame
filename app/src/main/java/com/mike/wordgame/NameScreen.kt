@@ -1,5 +1,7 @@
 package com.mike.wordgame
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FiniteAnimationSpec
 
@@ -44,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -58,7 +61,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
-
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 @Composable
@@ -88,6 +92,7 @@ fun NameScreen(navController: NavController){
 fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Unit) {
     var entername by remember{ mutableStateOf("Hello, there!")}
     var clicked by remember { mutableStateOf(false )}
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -108,6 +113,7 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
             onValueChange = { newUsername ->
                 if (newUsername.all { it.isLetterOrDigit() }) {
                     GlobalVariables.username.value = newUsername
+
                 } else {
                     entername = "Alphanumeric only"
                     GlobalVariables.enterednamecolor.value = Color.Red
@@ -134,6 +140,7 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
             onClick = {
                 if (GlobalVariables.username.value.trim().isNotEmpty()) {
                     onNameEntered(GlobalVariables.username.value.trim())
+                    saveNameToFile(context = context, name = GlobalVariables.username.value)
                     navController.navigate("AvatarScreen")
                 } else {
                     entername = "No username entered"
@@ -354,7 +361,12 @@ fun Logo() {
             }
         }
     }
+
+
+
 }
+
+
 
 @Preview(heightDp = 850)
 @Composable

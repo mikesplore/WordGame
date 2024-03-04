@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.capitalize
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -51,6 +53,7 @@ import java.util.Locale
 
 @Composable
 fun HelloScreen(navController: NavController){
+
     var username = GlobalVariables.username.value
 
     Column(modifier = Modifier
@@ -68,7 +71,12 @@ fun HelloScreen(navController: NavController){
                 "Tap the Image to change avatar"
             ), fontSize = 20.sp
         )
-        NameProfile(name = username, navController, sizee = 270.dp)
+        NameProfile(
+            name = username,
+            navController = navController,
+            sizee = 270.dp,
+            fontsize = 170.sp,
+            selectedAvatar = GlobalVariables.selectedAvatar)
 
         ProceedToGameButton(navController = navController)
     }
@@ -89,9 +97,12 @@ fun ProceedToGameButton(navController: NavController){
 } //2130968591
 
 @Composable
-fun NameProfile(name: String, navController: NavController, sizee: Dp) {
-    val selectedAvatar = /*2130968591*/ GlobalVariables.selectedAvatar
+fun NameProfile(name: String, navController: NavController, sizee: Dp, fontsize: TextUnit, selectedAvatar: Int?) {
+    //val selectedAvatar = /*2130968591*/ GlobalVariables.selectedAvatar
+    val selectedAvatars = remember { mutableStateOf(mutableMapOf<String, Int>()) }
+
     var clickable by remember { mutableStateOf(false) }
+
 
     Box(
         modifier = Modifier
@@ -120,7 +131,7 @@ fun NameProfile(name: String, navController: NavController, sizee: Dp) {
                 text = first,
                 style = TextStyle(
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 150.sp,
+                    fontSize = fontsize,
                     color = Color.White,
                     fontFamily = FontFamily.Serif
                 )
