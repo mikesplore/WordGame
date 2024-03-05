@@ -87,6 +87,7 @@ fun LevelScreen(navController: NavController){
 
                 Button(
                     onClick = {
+                        GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel)
                         GlobalVariables.timer.value = 60
                         GlobalVariables.score.value = 0
                         navController.navigate("GameScreen") },

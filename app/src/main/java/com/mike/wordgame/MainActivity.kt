@@ -31,14 +31,12 @@ object GlobalVariables {
     var high_score: MutableState<Int> = mutableStateOf(0)
     var outcomeColor: MutableState<Color> = mutableStateOf(Color(0xff424769))
     var hintcolor: MutableState<Color> = mutableStateOf(Color(0xff424769))
-    var thanksname: MutableState<String> = mutableStateOf("anonymous")
     var hint: MutableState<String> = mutableStateOf("")
-    var selectedcategory: String = "Mike"
+    var selectedcategory: MutableState<String> = mutableStateOf("")
     var selectedlevel: String = "easy"
-    var word: MutableState<String> = mutableStateOf(getRandomWord(selectedcategory, selectedlevel))
+    var word: MutableState<String> = mutableStateOf(getRandomWord(selectedcategory.value, selectedlevel))
     var timer: MutableState<Int> = mutableStateOf(60)
     var timerRunning: MutableState<Boolean> = mutableStateOf(true)
-    var enterednamecolor: MutableState<Color> = mutableStateOf(Color.White)
     var timerbackgroundcolor: MutableState<Color> = mutableStateOf(Color(0xff7077A1))
     var correctGuesscount: MutableState<Int> = mutableStateOf(0)
     var wrongGuesscount: MutableState<Int> = mutableStateOf(0)
@@ -48,7 +46,6 @@ object GlobalVariables {
     var username: MutableState<String> = mutableStateOf("")
     var enteredword: MutableState<String> = mutableStateOf("")
     var selectedAvatar: Int? = null
-    var prevoiusword: MutableState<String> = mutableStateOf("")
     var hintbackground: MutableState<Color> = mutableStateOf(Color(0x00FFFFFF))
 
 

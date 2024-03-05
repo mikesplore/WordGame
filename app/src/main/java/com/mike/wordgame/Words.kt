@@ -8,7 +8,7 @@ fun getRandomWord(category: String, selectedLevel: String): String {
         "expert" -> expertLists[category]?.random() ?: "Start"
         "master" -> masterLists[category]?.random() ?: "Start"
         "impossible" -> impossibleLists[category]?.random() ?: "Start"
-        else -> "Start"
+        else -> ""
     }
 }
 

@@ -69,8 +69,8 @@ fun CategorySCreen(navController: NavController) {
     var selectedCategory by remember { mutableStateOf("Select a category") }
     var SelectedCategoryname by remember { mutableStateOf("") }
 
-    GlobalVariables.selectedcategory=selectedCategory
-    SelectedCategoryname = GlobalVariables.selectedcategory
+    GlobalVariables.selectedcategory.value=selectedCategory
+    SelectedCategoryname = GlobalVariables.selectedcategory.value
 
 
     Column(
@@ -163,7 +163,8 @@ fun CategorySCreen(navController: NavController) {
             contentAlignment = Alignment.Center
         ) {
             Button(
-                onClick = { navController.navigate("LevelScreen") },
+                onClick = {
+                    navController.navigate("LevelScreen") },
                 modifier = Modifier
                     .width(300.dp)
                     .padding(16.dp),

@@ -149,7 +149,7 @@ fun Gamescreen(navController: NavController) {
             HighScoreBox()
         }
         Row() {
-            Text(text = GlobalVariables.selectedcategory.capitalize(Locale.ROOT),style = TextStyle(),
+            Text(text = GlobalVariables.selectedcategory.value.capitalize(Locale.ROOT),style = TextStyle(),
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White,
                 fontSize = 20.sp,
@@ -279,7 +279,7 @@ fun Gamescreen(navController: NavController) {
                     GlobalVariables.hint.value = GlobalVariables.word.value
                     GlobalVariables.hintcolor.value = Color(0xff1e8a37)
                     GlobalVariables.hintbackground.value = Color(0xffF6B17A)
-                    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory, GlobalVariables.selectedlevel)
+                    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value, GlobalVariables.selectedlevel)
                     GlobalVariables.timer.value+=10
                     GlobalVariables.correctGuesscount.value+=1
                     GlobalVariables.Attempts.value+=1
@@ -372,7 +372,7 @@ fun TimerBox() {
                      GlobalVariables.timer.value = 60
                      GlobalVariables.score.value = 0
                      GlobalVariables.timerRunning.value = true
-                     GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory,GlobalVariables.selectedlevel)
+                     GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel)
 
     },
         modifier = Modifier
@@ -462,7 +462,7 @@ fun AnswerBoxButton(){
                      GlobalVariables.timer.value-=2
                      GlobalVariables.hint.value = GlobalVariables.word.value
                      GlobalVariables.hintcolor.value = Color(0xffF6B17A)
-                     GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory, GlobalVariables.selectedlevel)
+                     GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value, GlobalVariables.selectedlevel)
                      }
                      else{
                             GlobalVariables.timerRunning.value = false
@@ -480,7 +480,7 @@ fun SkipButton(){
     Button(onClick = {  if (GlobalVariables.timer.value!=0){
                         GlobalVariables.timer.value-=1
                         GlobalVariables.skippedguess.value+=1
-                        GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory,GlobalVariables.selectedlevel)
+                        GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel)
                         }else{
 
                             GlobalVariables.timerRunning.value = false

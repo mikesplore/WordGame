@@ -234,7 +234,7 @@ fun ResultScreen(navController: NavController) {
                     GlobalVariables.correctGuesscount.value=0
                     GlobalVariables.wrongGuesscount.value=0
                     GlobalVariables.skippedguess.value=0
-                    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory,GlobalVariables.selectedlevel)
+                    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel)
 
                 },
                 modifier = Modifier.width(150.dp),
