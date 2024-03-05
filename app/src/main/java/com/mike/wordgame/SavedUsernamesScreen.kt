@@ -59,8 +59,8 @@ import java.io.IOException
 fun SavedUsernames(navController: NavController) {
     val context = LocalContext.current
 
-    // Read saved names from the file
-    val savedNames = remember { readNameFile(context) }
+    // Read saved details from the file (name and image resource)
+    val savedDetails = remember { readDetails(context) }
 
     Scaffold(
         topBar = {
@@ -80,26 +80,22 @@ fun SavedUsernames(navController: NavController) {
                     navigationIconContentColor = Color(0xff7077A1),
                     actionIconContentColor = Color(0xff7077A1),
                     titleContentColor = Color.White
-
-                ),
-
-
+                )
             )
         }
-    )
-
-    {
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xff1F2138))
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .padding(top = 57.dp), // Adjust top padding to push content below app bar
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            // Display saved names and NameProfiles
             Spacer(modifier = Modifier.height(25.dp))
-            savedNames.forEach { name ->
+            Column() {
+            savedDetails.forEach { (name, imageResource) ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -108,7 +104,7 @@ fun SavedUsernames(navController: NavController) {
                         navController = navController,
                         sizee = 50.dp,
                         fontsize = 20.sp,
-                        selectedAvatar = GlobalVariables.selectedAvatar
+                        selectedAvatar = imageResource // Pass the image resource to NameProfile
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -120,49 +116,56 @@ fun SavedUsernames(navController: NavController) {
                     )
                 }
             }
+        }
 
-            Button(
-                onClick = {
-                    cleanusernameFile(context = context)
-                },
+            Row(
                 modifier = Modifier
-                    .padding(top = 30.dp)
-                    .align(Alignment.CenterHorizontally),
-                colors = ButtonDefaults.buttonColors(Color(0xffF6B17A))
+                    .absolutePadding(0.dp, 60.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text(
-                    "Clear",
-                    style = TextStyle(
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 20.sp,
-                        color = Color.Black
+                Button(
+                    onClick = {
+                        cleanusernameFile(context = context)
+                    },
+                    modifier = Modifier.padding(top = 30.dp),
+                    colors = ButtonDefaults.buttonColors(Color(0xffF6B17A))
+                ) {
+                    Text(
+                        "Clear",
+                        style = TextStyle(
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        )
                     )
-                )
-            }
+                }
 
-            Button(
-                onClick = {
-                    cleanHighScoreFile(context = context)
-                },
-                modifier = Modifier
-                    .padding(top = 30.dp)
-                    .align(Alignment.CenterHorizontally),
-                colors = ButtonDefaults.buttonColors(Color(0xffF6B17A))
-            ) {
-                Text(
-                    "Clear H-Score",
-                    style = TextStyle(
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 20.sp,
-                        color = Color.Black
+                Button(
+                    onClick = {
+                        cleanHighScoreFile(context = context)
+                    },
+                    modifier = Modifier.padding(top = 30.dp),
+                    colors = ButtonDefaults.buttonColors(Color(0xffF6B17A))
+                ) {
+                    Text(
+                        "Clear H-Score",
+                        style = TextStyle(
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        )
                     )
-                )
+                }
             }
         }
     }
 }
+
+
+
 
 
 
@@ -172,21 +175,23 @@ fun SavedUsernames(navController: NavController) {
 
 //function call to store data
 //saveDataToInternalStorage(context = context, message = textInputValue)
-fun saveNameToFile(context: Context, name: String) {
+fun saveDetails(context: Context, name: String, imageResource: Int) {
     try {
         val fos: FileOutputStream =
             context.openFileOutput("usernameFile.txt", Context.MODE_APPEND) // Open file in append mode
-        fos.write("$name\n".toByteArray()) // Add a newline character to separate entries
+        val entry = "$name,$imageResource\n" // Combine name and imageResource with a comma separator
+        fos.write(entry.toByteArray()) // Write the combined entry to the file
         fos.close()
     } catch (e: Exception) {
         e.printStackTrace()
-        Toast.makeText(context, "Error saving username", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Error saving username and image", Toast.LENGTH_SHORT).show()
     }
 }
 
 
 
-fun readNameFile(context: Context): List<String> {
+
+fun readDetails(context: Context): List<Pair<String, Int>> {
     return try {
         val fin: FileInputStream = context.openFileInput("usernameFile.txt")
         val temp = StringBuilder()
@@ -195,28 +200,37 @@ fun readNameFile(context: Context): List<String> {
             temp.append(a.toChar())
         }
         fin.close()
-        temp.toString().split("\n").filter { it.isNotBlank() }
+        temp.toString().split("\n")
+            .filter { it.isNotBlank() }
+            .map { entry ->
+                val parts = entry.split(",")
+                Pair(parts[0], parts[1].toInt())
+            }
     } catch (e: Exception) {
         e.printStackTrace()
         emptyList()
     }
 }
 
+
 //clear the names file
 fun cleanusernameFile(context: Context) {
     try {
         val file = File(context.filesDir,"usernameFile.txt")
         file.writeText("")
-        Toast.makeText(context, "File cleared successfully.", Toast.LENGTH_SHORT).show()    } catch (e: Exception) {
+        Toast.makeText(context, "Username file cleared Successfully.", Toast.LENGTH_SHORT).show()
+    } catch (e: Exception) {
         e.printStackTrace()
-        Toast.makeText(context, "Error cleaning file", Toast.LENGTH_SHORT).show()    }
+        Toast.makeText(context, "Error cleaning file", Toast.LENGTH_SHORT).show()
+    }
 }
+
 
 fun cleanHighScoreFile(context: Context) {
     try {
         val file = File(context.filesDir,"HighScore.txt")
         file.writeText("")
-        Toast.makeText(context, "File cleared successfully.", Toast.LENGTH_SHORT).show()    } catch (e: Exception) {
+        Toast.makeText(context, "High score file cleared successfully.", Toast.LENGTH_SHORT).show()    } catch (e: Exception) {
         e.printStackTrace()
         Toast.makeText(context, "Error cleaning file", Toast.LENGTH_SHORT).show()    }
 }

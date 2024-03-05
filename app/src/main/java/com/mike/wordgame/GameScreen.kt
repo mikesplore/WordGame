@@ -605,7 +605,7 @@ fun getIntFromInternalStorage(context: Context): Int {
     } catch (e: IOException) {
         e.printStackTrace()
         // Handle the error, e.g., show a toast message
-        Toast.makeText(context, "Error parsing high score", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "High Score initialized to zero", Toast.LENGTH_SHORT).show()
 
     }
     return value

@@ -22,26 +22,21 @@ import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
@@ -53,43 +48,61 @@ class AvatarViewModel {
 // Global variable to hold the selected avatar image resource ID
 var selectedAvatarResource: Int? = null // Selected avatar resource ID
 @Composable
-fun AvatarScreen(navController: NavController){
-
-Column(modifier = Modifier
-    .fillMaxSize()
-    .background(Color(0xff1F2138)),
-    verticalArrangement = Arrangement.SpaceEvenly,
-    horizontalAlignment = Alignment.CenterHorizontally){
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
-        Text(text = "Avatars",
+fun AvatarScreen(navController: NavController) {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xff1F2138)),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Text(
+                text = "Avatars",
+                style = TextStyle(),
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
+                fontSize = 39.sp,
+                color = Color.White
+            )
+        }
+        Text(
+            text = "Select an Avatar",
             style = TextStyle(),
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Serif,
-            fontSize = 39.sp,
+            fontSize = 29.sp,
             color = Color.White
-       )
+        )
+        Avatar(AvatarViewModel())
+        Button(
+            onClick = {
+                GlobalVariables.selectedAvatar?.let {
+                    saveDetails(
+                        context = context,
+                        name = GlobalVariables.username.value,
+                        imageResource = it
+                    )
 
+                }
+                navController.navigate("HelloScreen")
+            },
+            colors = ButtonDefaults.buttonColors(Color(0xffF6B17A)),
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Text(
+                text = "Continue",
+                style = TextStyle(),
+                fontWeight = FontWeight.Light,
+                fontFamily = FontFamily.Serif,
+                fontSize = 15.sp,
+                color = Color.Black
+            )
+        }
     }
-    Text(text = "Select an Avatar",
-        style = TextStyle(),
-        fontWeight = FontWeight.Bold,
-        fontFamily = FontFamily.Serif,
-        fontSize = 29.sp,
-        color = Color.White)
-    Avatar(AvatarViewModel())
-Button(onClick = { navController.navigate("HelloScreen")},
-    colors = ButtonDefaults.buttonColors(Color(0xffF6B17A)),
-    shape = RoundedCornerShape(10.dp)) {
-    Text(text = "Continue",
-        style = TextStyle(),
-        fontWeight = FontWeight.Light,
-        fontFamily = FontFamily.Serif,
-        fontSize = 15.sp,
-        color = Color.Black)
-    
 }
-}
-}
+
 @Composable
 fun Avatar(viewModel: AvatarViewModel) {
     // Define a list of image resources
@@ -102,17 +115,25 @@ fun Avatar(viewModel: AvatarViewModel) {
         R.drawable.avatar5,
         R.drawable.avatar7,
         R.drawable.avatar6,
-        R.drawable.avatar8
+        R.drawable.avatar8,
+        R.drawable.avatar9,
+        R.drawable.a1,
+        R.drawable.a2,
+        R.drawable.avatar10,
+        R.drawable.images5,
+        R.drawable.image5,
+        R.drawable.images4
+
     )
 
     // Define the number of columns in the grid
-    val columns = 3
+    val columns = 4
 
     // Calculate the number of rows in the grid
     val rows = (images.size + columns - 1) / columns
 
     // Create a grid with the specified number of rows and columns
-    Grid(columns = columns, rows = rows, images = images, viewModel = viewModel) { imageResource ->
+    Grid(columns = columns, rows = rows, images = images) { imageResource ->
         Image(
             painter = painterResource(id = imageResource),
             contentDescription = null,
@@ -144,7 +165,6 @@ fun Grid(
     columns: Int,
     rows: Int,
     images: List<Int>,
-    viewModel: AvatarViewModel,
     content: @Composable (imageResource: Int) -> Unit
 ) {
     Column {
@@ -169,8 +189,7 @@ fun Grid(
 @Preview
 @Composable
 fun AvatarScreenPreview() {
-    // Create an instance of the AvatarViewModel
-    val viewModel = AvatarViewModel()
+
 
     // Call the AvatarScreen composable with the ViewModel
     AvatarScreen(navController = rememberNavController())

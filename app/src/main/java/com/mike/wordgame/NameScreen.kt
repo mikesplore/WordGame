@@ -84,7 +84,6 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
     var entername by remember { mutableStateOf("Hello, there!")}
     var clicked by remember { mutableStateOf(false )}
     var textcolor by remember{(mutableStateOf(Color.White))}
-    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -135,7 +134,6 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
             onClick = {
                 if (GlobalVariables.username.value.trim().isNotEmpty()) {
                     onNameEntered(GlobalVariables.username.value.trim())
-                    saveNameToFile(context = context, name = GlobalVariables.username.value)
                     navController.navigate("AvatarScreen")
                 } else {
                     entername = "No username entered"

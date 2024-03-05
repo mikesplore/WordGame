@@ -95,7 +95,7 @@ fun CategorySCreen(navController: NavController) {
         Row(modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
             TypewriterText(texts = listOf(
-                "$SelectedCategoryname"
+                SelectedCategoryname
             ), fontSize = 30.sp)
         }
 

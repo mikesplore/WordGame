@@ -86,8 +86,7 @@ fun ProceedToGameButton(navController: NavController){
 
 @Composable
 fun NameProfile(name: String, navController: NavController, sizee: Dp, fontsize: TextUnit, selectedAvatar: Int?) {
-    //val selectedAvatar = /*2130968591*/ GlobalVariables.selectedAvatar
-    val selectedAvatars = remember { mutableStateOf(mutableMapOf<String, Int>()) }
+
 
     var clickable by remember { mutableStateOf(false) }
 
