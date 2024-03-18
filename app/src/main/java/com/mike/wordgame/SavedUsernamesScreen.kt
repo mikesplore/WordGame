@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Paint.Align
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,10 +18,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -66,15 +73,22 @@ fun SavedUsernames(navController: NavController) {
         topBar = {
             TopAppBar(
                 title = {
+                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+
+
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                    }
                     Text(
-                        "Saved Usernames",
+                        "Saved Profiles",
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Serif,
                         color = Color.White,
                         textAlign = TextAlign.Center
                     )
-                }, colors = TopAppBarColors(
+                        Box(modifier = Modifier.width(30.dp))
+                }}, colors = TopAppBarColors(
                     containerColor = Color(0xff7077A1),
                     scrolledContainerColor = Color(0xff7077A1),
                     navigationIconContentColor = Color(0xff7077A1),
@@ -87,6 +101,7 @@ fun SavedUsernames(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .background(Color(0xff1F2138))
                 .padding(horizontal = 16.dp)
                 .padding(top = 57.dp), // Adjust top padding to push content below app bar
@@ -120,7 +135,7 @@ fun SavedUsernames(navController: NavController) {
 
             Row(
                 modifier = Modifier
-                    .absolutePadding(0.dp, 60.dp)
+                    .absolutePadding(0.dp, 10.dp)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
@@ -132,11 +147,11 @@ fun SavedUsernames(navController: NavController) {
                     colors = ButtonDefaults.buttonColors(Color(0xffF6B17A))
                 ) {
                     Text(
-                        "Clear",
+                        "Clear List",
                         style = TextStyle(
                             fontFamily = FontFamily.Serif,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Light,
+                            fontSize = 15.sp,
                             color = Color.Black
                         )
                     )
@@ -153,8 +168,8 @@ fun SavedUsernames(navController: NavController) {
                         "Clear H-Score",
                         style = TextStyle(
                             fontFamily = FontFamily.Serif,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Light,
+                            fontSize = 15.sp,
                             color = Color.Black
                         )
                     )

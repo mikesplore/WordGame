@@ -51,6 +51,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
@@ -146,7 +147,7 @@ fun Gamescreen(navController: NavController) {
         ) {
             ScoreBox()
             TimerBox()
-            HighScoreBox()
+            HighScoreBox(navController = navController)
         }
         Row() {
             Text(text = GlobalVariables.selectedcategory.value.capitalize(Locale.ROOT),style = TextStyle(),
@@ -256,12 +257,7 @@ fun Gamescreen(navController: NavController) {
         }}
 
 
-        WordField(
-            onTextChanged = {
 
-                GlobalVariables.enteredword.value = it
-                            },
-        )
 
         var inputWord = GlobalVariables.enteredword.value.replace(" ","")
 
@@ -392,7 +388,7 @@ fun TimerBox() {
 }
 
 @Composable
-fun HighScoreBox() {
+fun HighScoreBox(navController: NavController) {
 
     val context = LocalContext.current
     LaunchedEffect(Unit) {
@@ -416,6 +412,7 @@ fun HighScoreBox() {
 
         modifier = Modifier
             .size(100.dp)
+            .clickable { navController.navigate("profile") }
             .background(Color(0xff424769), shape = RoundedCornerShape(10.dp)),
         contentAlignment = Alignment.Center
     ) {
@@ -458,7 +455,7 @@ fun HighScoreBox() {
 @Composable
 fun AnswerBoxButton(){
     Button(onClick = {
-                        if(GlobalVariables.timer.value>0){
+                        if(GlobalVariables.timer.value>=0){
                      GlobalVariables.timer.value-=2
                      GlobalVariables.hint.value = GlobalVariables.word.value
                      GlobalVariables.hintcolor.value = Color(0xffF6B17A)

@@ -13,8 +13,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,9 +28,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,25 +42,38 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+val backbrush  = Brush.verticalGradient(
+    colors = listOf(
+        Color(0x80007BFF), // Transparent Royal Blue (lighter)
+        Color(0x80000080), // Transparent Dark Gray (darker)
+        Color(0x80000000),
 
+        )
+)
 
 @Composable
 fun HelloScreen(navController: NavController){
 
     var username = GlobalVariables.username.value
 
+
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(Color(0xff1F2138)),
+        .background(brush = backbrush),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly) {
 
 
-        hellostyle(name = GlobalVariables.username.value)
+        Text(text = GlobalVariables.username.value.uppercase(), style = TextStyle(),
+            color = Color.White,
+            fontSize = 60.sp,
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Bold,
+            )
 
         TypewriterText(
             texts = listOf(
-
+                "Hi, ${GlobalVariables.username.value.capitalize()}!",
                 "Tap the Image to change avatar"
             ), fontSize = 20.sp
         )
@@ -64,7 +82,7 @@ fun HelloScreen(navController: NavController){
             navController = navController,
             sizee = 270.dp,
             fontsize = 170.sp,
-            selectedAvatar = GlobalVariables.selectedAvatar)
+            selectedAvatar =GlobalVariables.selectedAvatar)
 
         ProceedToGameButton(navController = navController)
     }
@@ -76,11 +94,16 @@ fun ProceedToGameButton(navController: NavController){
 
         navController.navigate("CategoryScreen") },
         modifier = Modifier
-            .width(250.dp)
+            .width(130.dp)
             .height(50.dp),
-        colors = ButtonDefaults.buttonColors(Color(0xffF6B17A)),
+        colors = ButtonDefaults.buttonColors(Color(0xFF00BCD4)),
         shape = RoundedCornerShape(10.dp)) {
-        Text(text = "Go to Category",style = TextStyle(), fontSize = 20.sp, fontFamily = FontFamily.Serif,color=Color.Black, fontWeight = FontWeight.Bold)
+
+        Text(text = "Next  ",style = TextStyle(), fontSize = 20.sp,
+            fontFamily = FontFamily.Serif,color=Color.Black,
+            fontWeight = FontWeight.Bold)
+        Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "arrow", tint = Color.Black)
+
     }
 } //2130968591
 
@@ -93,7 +116,7 @@ fun NameProfile(name: String, navController: NavController, sizee: Dp, fontsize:
 
     Box(
         modifier = Modifier
-            .background(Color(0xff7077A1), shape = CircleShape)
+            .background(brush = backbrush, shape = CircleShape)
             .clip(RoundedCornerShape(10.dp))
             .clickable {
                 // Set clickable to true when clicked
@@ -119,17 +142,16 @@ fun NameProfile(name: String, navController: NavController, sizee: Dp, fontsize:
                 style = TextStyle(
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = fontsize,
-                    color = Color.White,
+                    color = Color(0xFF00BCD4),
                     fontFamily = FontFamily.Serif
                 )
             )
         }
     }
 
-    // Navigate to AvatarScreen when the box containing the avatar is clicked
     LaunchedEffect(clickable) {
         if (clickable) {
-            navController.navigate("AvatarScreen")
+            navController.navigate("profile")
         }
     }
 }

@@ -115,103 +115,7 @@ fun ResultScreen(navController: NavController) {
         }
 
         // Score Box
-        Column(modifier = Modifier
-            .background(Color(0xff1F2138), shape = RoundedCornerShape(20.dp))
-            .height(300.dp)
-            .width(350.dp)) {
-            Box(modifier = Modifier
-                .width(350.dp)
-                .height(50.dp)
-                .background(Color(0xff7077A1), shape = RoundedCornerShape(20.dp)),
-                 contentAlignment = Alignment.Center) {
-                Text(text = "Correct words:   ${GlobalVariables.correctGuesscount.value}",
-                    style = TextStyle(),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Serif,
-                    color = Color.White
-                )
 
-
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Box(modifier = Modifier
-                .width(350.dp)
-                .height(50.dp)
-                .background(Color(0xff7077A1), shape = RoundedCornerShape(20.dp)), contentAlignment = Alignment.Center) {
-                Text(text = "Incorrect words:   ${GlobalVariables.wrongGuesscount.value}",
-                    style = TextStyle(),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Serif,
-                    color = Color.White)
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Box(modifier = Modifier
-                .width(350.dp)
-                .height(50.dp)
-                .background(Color(0xff7077A1), shape = RoundedCornerShape(20.dp)), contentAlignment = Alignment.Center) {
-                Text(text = "Skipped words:   ${GlobalVariables.skippedguess.value}",
-                    style = TextStyle(),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Serif,
-                    color = Color.White)
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Row(modifier = Modifier
-                .width(350.dp)
-                .height(100.dp)
-                .background(Color(0xff7077A1), shape = RoundedCornerShape(20.dp)), horizontalArrangement = Arrangement.SpaceBetween) {
-                Box(modifier = Modifier
-                    .height(100.dp)
-                    .width(120.dp)
-                    .background(Color(0xff7077A1), shape = RoundedCornerShape(20.dp)),
-                    contentAlignment = Alignment.Center
-                ){
-                    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "Score", style = TextStyle(),
-                        fontSize = 20.sp,
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                    Text(text = "${GlobalVariables.score.value}",style = TextStyle(),
-                        fontSize = 30.sp,
-                        fontFamily = FontFamily.Serif,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White)
-                }
-                }
-                Box(modifier = Modifier
-                    .height(100.dp)
-                    .width(140.dp)
-                    .background(Color(0xff7077A1), shape = RoundedCornerShape(20.dp)),
-                    contentAlignment = Alignment.Center
-
-                ){
-                    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = "High Score",style = TextStyle(),
-                            fontSize = 20.sp,
-                            fontFamily = FontFamily.Serif,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                        Text(text = "${GlobalVariables.high_score.value}",style = TextStyle(),
-                            fontSize = 30.sp,
-                            fontFamily = FontFamily.Serif,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                            )
-                    }
-                }
-
-            }
-
-        }
 
         // Thanks Box
         Thanksbox()
@@ -298,7 +202,7 @@ fun Thanksbox(){
 
 fun exitApplication() {
 
-            val activity: MainActivity = MainActivity()
+            val activity=MainActivity()
             activity.finish()
             exitProcess(0)
 

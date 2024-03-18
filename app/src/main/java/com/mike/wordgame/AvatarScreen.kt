@@ -4,28 +4,29 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -36,7 +37,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
@@ -50,14 +50,36 @@ var selectedAvatarResource: Int? = null // Selected avatar resource ID
 @Composable
 fun AvatarScreen(navController: NavController) {
     val context = LocalContext.current
+    val upperbrush = Brush.horizontalGradient(
+        colors = listOf(
+            Color(0xFF007BFF), // Royal Blue (fully opaque)
+            Color(0x80007BFF), // Transparent Royal Blue (lighter)
+            Color(0x80000060), // Transparent Dark Gray (darker)
+            Color(0x80000000)  // Fully Transparent
+        )
+    )
+    val lowerbrush = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFF007BFF), // Royal Blue (fully opaque)
+            Color(0x80007BFF), // Transparent Royal Blue (lighter)
+            Color(0x80000060), // Transparent Dark Gray (darker)
+            Color(0x80000000)  // Fully Transparent
+        )
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xff1F2138)),
+            .background(brush = upperbrush),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+
+                .height(150.dp)
+                .fillMaxWidth(), contentAlignment = Alignment.Center
+        ) {
             Text(
                 text = "Avatars",
                 style = TextStyle(),
@@ -67,6 +89,15 @@ fun AvatarScreen(navController: NavController) {
                 color = Color.White
             )
         }
+
+    Column(modifier = Modifier
+        .background(brush = lowerbrush, shape = RoundedCornerShape(40.dp,40.dp))
+        .height(700.dp)
+        .fillMaxWidth(),
+        verticalArrangement = Arrangement.SpaceAround,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+
+
         Text(
             text = "Select an Avatar",
             style = TextStyle(),
@@ -86,20 +117,25 @@ fun AvatarScreen(navController: NavController) {
                     )
 
                 }
-                navController.navigate("HelloScreen")
+                navController.navigate("Usernames")
             },
-            colors = ButtonDefaults.buttonColors(Color(0xffF6B17A)),
+            colors = ButtonDefaults.buttonColors(Color(0xFF00BCD4)),
             shape = RoundedCornerShape(10.dp)
         ) {
             Text(
-                text = "Continue",
+                text = "Next  ",
                 style = TextStyle(),
-                fontWeight = FontWeight.Light,
+                fontWeight = FontWeight.Normal,
                 fontFamily = FontFamily.Serif,
                 fontSize = 15.sp,
                 color = Color.Black
             )
+            Icon(
+                imageVector = Icons.AutoMirrored.Default.ArrowForward, contentDescription = "",
+                tint = Color.Black
+            )
         }
+    }
     }
 }
 
@@ -151,13 +187,14 @@ fun Avatar(viewModel: AvatarViewModel) {
                 }
         )
 
+
     }
 
     // Display the selected avatar, if any
-   /* viewModel.selectedAvatar.value?.let { avatarResource ->
+    /* viewModel.selectedAvatar.value?.let { avatarResource ->
         Text("Selected Avatar: $avatarResource")
-    }
-        */
+    }*/
+
 }
 
 @Composable

@@ -21,8 +21,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -36,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -58,6 +62,14 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun NameScreen(navController: NavController){
+    val backbrush  = Brush.verticalGradient(
+        colors = listOf(
+            Color(0x80007BFF), // Transparent Royal Blue (lighter)
+            Color(0x80000080), // Transparent Dark Gray (darker)
+            Color(0x80000000),
+
+        )
+    )
     val isVisible by remember { mutableStateOf(true) }
     AnimatedVisibility(
         visible = isVisible,
@@ -65,7 +77,7 @@ fun NameScreen(navController: NavController){
         exit = fadeOut() + slideOutVertically()+ shrinkOut()
     ) {
     Column(modifier = Modifier
-        .background(Color(0xff1F2138))
+        .background(brush = backbrush)
         .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly){
@@ -82,26 +94,33 @@ fun NameScreen(navController: NavController){
 @Composable
 fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Unit) {
     var entername by remember { mutableStateOf("Hello, there!")}
-    var clicked by remember { mutableStateOf(false )}
+    var clicked by remember { mutableStateOf(true )}
     var textcolor by remember{(mutableStateOf(Color.White))}
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(if (clicked) 190.dp else 35.dp)
-            .padding(horizontal = 16.dp)
-            .clickable { clicked = !clicked }, // Toggle clicked state when clicked
+    Column(modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
-    ) {
-        // Display the text "Hello there" always
+        verticalArrangement = Arrangement.Center) {
         Text(
             text = entername,
-            style = TextStyle(color =textcolor, fontSize = 30.sp, fontFamily = FontFamily.Serif)
+            style = TextStyle(color =textcolor, fontSize = 30.sp, fontFamily = FontFamily.Serif),
+            modifier = Modifier.clickable { clicked = !clicked }
         )
+        AnimatedVisibility(visible = clicked) {
+            
 
-        // Display the text input field only when clicked is true
-        if (clicked) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(135.dp)
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            // Display the text "Hello there" always
+
+
+            // Display the text input field only when clicked is true
+
             OutlinedTextField(
                 value = GlobalVariables.username.value,
                 onValueChange = { newUsername ->
@@ -114,46 +133,56 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
                     }
                 },
                 textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
-                label = { Text("Name", style = TextStyle(), color = Color.White, fontFamily = FontFamily.Serif) },
+                label = {
+                    Text(
+                        "Name",
+                        style = TextStyle(),
+                        color = Color.White,
+                        fontFamily = FontFamily.Serif
+                    )
+                },
                 modifier = Modifier
                     .width(220.dp)
                     .padding(top = 16.dp, bottom = 8.dp),
                 singleLine = true,
                 colors = TextFieldDefaults.colors(
-                    unfocusedContainerColor = Color(0xff7077A1),
-                    focusedContainerColor = Color(0xff7077A1),
+                    unfocusedContainerColor = Color(0x80009Bff),
+                    focusedContainerColor = Color(0x80009Bff),
                     cursorColor = Color.Black,
                     focusedTextColor = Color.Black,
                     unfocusedTextColor = Color.Black
                 ),
                 shape = RoundedCornerShape(10.dp)
             )
-        }
 
-        Button(
-            onClick = {
-                if (GlobalVariables.username.value.trim().isNotEmpty()) {
-                    onNameEntered(GlobalVariables.username.value.trim())
-                    navController.navigate("AvatarScreen")
-                } else {
-                    entername = "No username entered"
-                    textcolor = Color.Red
-                }
-            },
-            modifier = Modifier.width(150.dp),
-            colors = ButtonDefaults.buttonColors(Color(0xffF6B17A)),
-            shape = RoundedCornerShape(10.dp)
-        ) {
-            Text(text = "Continue", style = TextStyle(), fontFamily = FontFamily.Serif, color = Color.Black, fontWeight = FontWeight.Bold)
+
+            Button(
+                onClick = {
+                    if (GlobalVariables.username.value.trim().isNotEmpty()) {
+                        onNameEntered(GlobalVariables.username.value.trim())
+                        navController.navigate("AvatarScreen")
+                    } else {
+                        entername = "No username entered"
+                        textcolor = Color.Red
+                    }
+                },
+                modifier = Modifier.width(130.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xFF00BCD4)),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Text(text = "Next  ",style = TextStyle(), fontSize = 20.sp,
+                    fontFamily = FontFamily.Serif,color=Color.Black,
+                    fontWeight = FontWeight.Bold)
+                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "arrow", tint = Color.Black)
+            }
         }
     }
-
     LaunchedEffect(entername) {
         delay(2000)
         textcolor = Color.White
         entername = "Enter your name"
     }
-}
+}}
 
 
 
@@ -198,7 +227,7 @@ fun Titlebar() {
     }
     LaunchedEffect(wlettercolor, olettercolor, rlettercolor, dlettercolor, glettercolor, alettercolor, mlettercolor, elettercolor) {
         delay(100)
-        wlettercolor = 0xffF6B17A
+        wlettercolor = 0xFF90EE90
         delay(90)
         olettercolor = 0xffffffff
         delay(80)
@@ -206,7 +235,7 @@ fun Titlebar() {
         delay(70)
         dlettercolor = 0xffffffff
         delay(60)
-        glettercolor = 0xffF6B17A
+        glettercolor = 0xFF90EE90
         delay(50)
         alettercolor = 0xffffffff
         delay(55)
@@ -364,5 +393,4 @@ fun Logo() {
 fun NameScreenPreview(){
     NameScreen(navController = rememberNavController())
 }
-
 
