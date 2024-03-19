@@ -12,6 +12,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,14 +21,14 @@ import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,18 +38,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextMotion
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import java.util.Locale
 
 @Composable
 fun CategoryScreen(navController: NavController) {
@@ -75,12 +72,23 @@ fun CategorySCreen(navController: NavController) {
 
     Column(
         modifier = Modifier
-            .background(Color(0xff1F2138))
+            .background(brush = backbrush)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceEvenly
+        verticalArrangement = Arrangement.SpaceAround
     ) {
-        // Header
-            Row(modifier= Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier= Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally)
+            {
+                Row (modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = "arrow back",
+                        modifier = Modifier.clickable { navController.popBackStack() }
+                    )
+                }
+
                 Text(text = "CATEGORY",
                     style = TextStyle(
                         fontSize = 45.sp,
@@ -94,7 +102,7 @@ fun CategorySCreen(navController: NavController) {
         Row(modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
             TypewriterText(texts = listOf(
-                SelectedCategoryname
+                SelectedCategoryname.capitalize()
             ), fontSize = 30.sp)
         }
 
@@ -161,29 +169,26 @@ fun CategorySCreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Button(
-                onClick = {
-                    navController.navigate("LevelScreen") },
+            Button(onClick = {
+
+                navController.navigate("LevelScreen") },
                 modifier = Modifier
-                    .width(300.dp)
-                    .padding(16.dp),
-                shape = RoundedCornerShape(10.dp), // Rounded corners
-                colors = ButtonDefaults.buttonColors(Color(0xffF6B17A)),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
-            ) {
-                Text(
-                    text = "Select game level",
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontFamily = FontFamily.Serif,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
+                    .width(130.dp)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xff2196F3)),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp),
+                shape = RoundedCornerShape(10.dp)) {
+
+                Text(text = "Next  ",style = TextStyle(), fontSize = 20.sp,
+                    fontFamily = FontFamily.Serif,color=Color.Black,
+                    fontWeight = FontWeight.Bold)
+                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "arrow", tint = Color.Black)
+
             }
         }
     }
-}
+    }
+
 
 @Composable
 fun CategoryButton(
@@ -196,8 +201,9 @@ fun CategoryButton(
         onClick = { onCategorySelected(category) },
         modifier = Modifier.width(121.dp),
         colors = ButtonDefaults.buttonColors(
-            Color(if (selectedCategory == category) 0xffF6B17A else 0xff7077A1)
-        )
+            Color(if (selectedCategory == category) 0xff00008B else 0xff2196F3)
+        ),
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
     ) {
         Text(text = label,
             style = TextStyle(), fontFamily = FontFamily.Serif
@@ -206,37 +212,7 @@ fun CategoryButton(
     }
 }
 
-@Composable
-fun hellostyle(name:String){
-val infiniteTransition = rememberInfiniteTransition(label = "infinite transition")
-val scale by infiniteTransition.animateFloat(
-    initialValue = 1f,
-    targetValue = 8f,
-    animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse),
-    label = "scale"
-)
-Box(modifier = Modifier
-    .fillMaxWidth()
-    .height(50.dp)) {
-    Text(
-        text = name,
 
-        modifier = Modifier
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-                transformOrigin = TransformOrigin.Center
-            }
-            .align(Alignment.Center),
-        // Text composable does not take TextMotion as a parameter.
-        // Provide it via style argument but make sure that we are copying from current theme
-        style = LocalTextStyle.current.copy(textMotion = TextMotion.Animated),
-        color = Color.White,
-        fontWeight = FontWeight.SemiBold,
-        fontFamily = FontFamily.Serif,
-
-    )
-}}
 
 
 
