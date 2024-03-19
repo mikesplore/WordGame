@@ -81,7 +81,6 @@ fun CategorySCreen(navController: NavController) {
     ) {
         // Header
             Row(modifier= Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
-                NameProfile(name = GlobalVariables.username.value, navController = navController, sizee = 70.dp, 50.sp,GlobalVariables.selectedAvatar)
                 Text(text = "CATEGORY",
                     style = TextStyle(
                         fontSize = 45.sp,

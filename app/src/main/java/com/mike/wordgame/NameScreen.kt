@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
@@ -62,19 +63,18 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun NameScreen(navController: NavController){
-    val backbrush  = Brush.verticalGradient(
+    val backbrush = Brush.verticalGradient(
         colors = listOf(
-            Color(0x80007BFF), // Transparent Royal Blue (lighter)
-            Color(0x80000080), // Transparent Dark Gray (darker)
-            Color(0x80000000),
-
+            Color(0xFF1E88E5), // Blue
+            Color(0xFF42A5F5), // Light Blue
+            Color(0xFF90CAF9)  // Lighter Blue
         )
     )
     val isVisible by remember { mutableStateOf(true) }
     AnimatedVisibility(
         visible = isVisible,
-        enter = fadeIn()+ expandIn(),
-        exit = fadeOut() + slideOutVertically()+ shrinkOut()
+        enter = fadeIn() + slideInVertically(),
+        exit = fadeOut() + slideOutVertically()
     ) {
     Column(modifier = Modifier
         .background(brush = backbrush)
@@ -95,7 +95,7 @@ fun NameScreen(navController: NavController){
 fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Unit) {
     var entername by remember { mutableStateOf("Hello, there!")}
     var clicked by remember { mutableStateOf(true )}
-    var textcolor by remember{(mutableStateOf(Color.White))}
+    var textcolor by remember{(mutableStateOf(Color.Black))}
 
     Column(modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -160,7 +160,7 @@ fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Uni
                 onClick = {
                     if (GlobalVariables.username.value.trim().isNotEmpty()) {
                         onNameEntered(GlobalVariables.username.value.trim())
-                        navController.navigate("AvatarScreen")
+                        navController.navigate("HelloScreen")
                     } else {
                         entername = "No username entered"
                         textcolor = Color.Red
@@ -323,7 +323,6 @@ fun TypewriterText(
 fun Logo() {
     // Define a list of image resources
     val images = listOf(
-        R.drawable.images1,
         R.drawable.images2,
         R.drawable.images3,
         R.drawable.images4,

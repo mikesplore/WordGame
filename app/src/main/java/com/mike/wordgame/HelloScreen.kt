@@ -1,13 +1,19 @@
 package com.mike.wordgame
 
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,62 +36,70 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+
 val backbrush  = Brush.verticalGradient(
     colors = listOf(
-        Color(0x80007BFF), // Transparent Royal Blue (lighter)
-        Color(0x80000080), // Transparent Dark Gray (darker)
-        Color(0x80000000),
+        Color(0xff2196F3), // Blue
+        Color(0xff2196F3), // Light Blue
+        Color(0xff00008B)
 
-        )
+    )
 )
 
 @Composable
 fun HelloScreen(navController: NavController){
-
-    var username = GlobalVariables.username.value
-
-
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(brush = backbrush),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly) {
-
-
-        Text(text = GlobalVariables.username.value.uppercase(), style = TextStyle(),
-            color = Color.White,
-            fontSize = 60.sp,
+    val username = GlobalVariables.username.value
+Column(modifier = Modifier
+    .background(brush = backbrush)
+    .fillMaxSize(),
+    verticalArrangement = Arrangement.SpaceAround,
+    horizontalAlignment = Alignment.CenterHorizontally) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(text = GlobalVariables.username.value.capitalize(),
+            style = TextStyle(),
             fontFamily = FontFamily.SansSerif,
-            fontWeight = FontWeight.Bold,
-            )
+            fontSize = 70.sp,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold)
 
-        TypewriterText(
-            texts = listOf(
-                "Hi, ${GlobalVariables.username.value.capitalize()}!",
-                "Tap the Image to change avatar"
-            ), fontSize = 20.sp
-        )
-        NameProfile(
-            name = username,
-            navController = navController,
-            sizee = 270.dp,
-            fontsize = 170.sp,
-            selectedAvatar =GlobalVariables.selectedAvatar)
 
-        ProceedToGameButton(navController = navController)
     }
+    Box(modifier = Modifier
+        .height(200.dp)
+        .fillMaxWidth(),
+        contentAlignment = Alignment.Center){
+        Imageselect(name = username)
+    }
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(100.dp),
+        contentAlignment = Alignment.Center){
+       ProceedToGameButton(navController = navController)
+    }
+
+
+
+    }
+
+
 }
 
 @Composable
@@ -96,7 +110,7 @@ fun ProceedToGameButton(navController: NavController){
         modifier = Modifier
             .width(130.dp)
             .height(50.dp),
-        colors = ButtonDefaults.buttonColors(Color(0xFF00BCD4)),
+        colors = ButtonDefaults.buttonColors(Color(0xff2196F3)),
         shape = RoundedCornerShape(10.dp)) {
 
         Text(text = "Next  ",style = TextStyle(), fontSize = 20.sp,
@@ -107,62 +121,72 @@ fun ProceedToGameButton(navController: NavController){
     }
 } //2130968591
 
+
 @Composable
-fun NameProfile(name: String, navController: NavController, sizee: Dp, fontsize: TextUnit, selectedAvatar: Int?) {
+fun Imageselect(name: String) {
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        imageUri = uri
+    }
 
-
-    var clickable by remember { mutableStateOf(false) }
-
-
-    Box(
-        modifier = Modifier
-            .background(brush = backbrush, shape = CircleShape)
-            .clip(RoundedCornerShape(10.dp))
-            .clickable {
-                // Set clickable to true when clicked
-                clickable = true
-            }
-            .size(sizee),
-        contentAlignment = Alignment.Center
-    ) {
-        selectedAvatar?.let { avatarResource ->
-            // Display the selected avatar image if available
-            Image(
-                painter = painterResource(id = avatarResource),
-                contentDescription = "Avatar Image",
+    val displayContent: @Composable () -> Unit = if (imageUri != null) {
+        // Display image if an image is selected
+        {
+            Box(
                 modifier = Modifier
-                    .size(sizee)
-                    .clip(CircleShape)
-            )
-        } ?: run {
-            // If no avatar is selected, display the first letter of the name
-            val first = name.first().toString().uppercase()
-            Text(
-                text = first,
-                style = TextStyle(
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = fontsize,
-                    color = Color(0xFF00BCD4),
-                    fontFamily = FontFamily.Serif
+                    .size(200.dp)
+                    .background(Color.White, shape = CircleShape)
+                    .border(3.dp, color = Color(0xff67C6E3), shape = CircleShape)
+                    .clickable {
+                        launcher.launch("image/*")
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(data = imageUri)
+                            .crossfade(true)
+                            .build()
+                    ),
+                    contentDescription = "profile",
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
                 )
-            )
+            }
+        }
+    } else {
+        // Display first letter of the name if no image is selected
+        {
+            Box(
+                modifier = Modifier
+                    .size(200.dp)
+                    .background(brush = backbrush , shape = CircleShape)
+                    .border(3.dp, color = Color(0xff67C6E3), shape = CircleShape)
+                    .clickable {
+                        launcher.launch("image/*")
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = name.take(1).capitalize(),
+                    style = TextStyle(
+                        fontSize = 170.sp,
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = Color.Black
+                )
+            }
         }
     }
 
-    LaunchedEffect(clickable) {
-        if (clickable) {
-            navController.navigate("profile")
-        }
-    }
+
+        displayContent()
+
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -171,3 +195,4 @@ fun NameProfile(name: String, navController: NavController, sizee: Dp, fontsize:
 fun HelloScreenPreview(){
     HelloScreen(navController = rememberNavController())
 }
+

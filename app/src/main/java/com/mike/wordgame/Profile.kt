@@ -66,13 +66,7 @@ fun Profile(navController: NavController){
         Column(modifier = Modifier.absolutePadding(0.dp,20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
 
 
-            NameProfile(
-                name = GlobalVariables.username.value,
-                navController = navController,
-                sizee = 250.dp,
-                fontsize = 190.sp,
-                selectedAvatar = GlobalVariables.selectedAvatar
-            )
+
             Box(modifier = Modifier
                 .height(50.dp)
 

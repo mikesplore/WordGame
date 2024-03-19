@@ -114,13 +114,7 @@ fun SavedUsernames(navController: NavController) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    NameProfile(
-                        name = name,
-                        navController = navController,
-                        sizee = 50.dp,
-                        fontsize = 20.sp,
-                        selectedAvatar = imageResource // Pass the image resource to NameProfile
-                    )
+
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = name,
