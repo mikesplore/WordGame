@@ -41,8 +41,10 @@ import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.ExitToApp
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -67,14 +69,14 @@ import java.io.FileInputStream
 fun GameScreen(navController: NavController) {
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(Color(0xff063977)),
+        .background(Color(0xff333A73)),
         verticalArrangement = Arrangement.SpaceBetween
 
     ) {
         Row (modifier = Modifier
-            .height(70.dp)
+            .height(60.dp)
             .fillMaxWidth()
-            .background(Color.Transparent),
+            .background(Color(0xff387ADF)),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically){
 
@@ -96,8 +98,13 @@ fun GameScreen(navController: NavController) {
 
             Row (modifier = Modifier.width(90.dp),
                 horizontalArrangement = Arrangement.SpaceBetween){
-                Icon(imageVector = Icons.Default.Refresh, contentDescription = "restart", tint = Color.White)
-                Icon(imageVector = Icons.Outlined.ExitToApp, contentDescription = "exit", tint = Color.White,
+                Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "restart", tint = Color.White,
+                    modifier = Modifier.clickable {
+                        GlobalVariables.pausegame.value = true
+                    })
+
+                
+                Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "exit", tint = Color.White,
                     modifier = Modifier
                         .clickable {
                             GlobalVariables.timer.value = 60
@@ -137,7 +144,7 @@ fun GameScreen(navController: NavController) {
 
                 }
                 Column(modifier = Modifier
-                    .background(Color(0xff0286df), shape = RoundedCornerShape(30.dp))
+                    .background(Color(0xffFBA834), shape = RoundedCornerShape(30.dp))
                     .height(400.dp)
                     .width(160.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -200,7 +207,7 @@ fun GameScreen(navController: NavController) {
                     TextField(
                         value = GlobalVariables.enteredword.value,
                         onValueChange = {GlobalVariables.enteredword.value = it},
-                        label = { Text(text = "My answer is")
+                        label = { Text(text = "Word")
                         }, colors = TextFieldDefaults.colors(
 
 
@@ -232,7 +239,7 @@ fun GameScreen(navController: NavController) {
                         modifier = Modifier
                             .height(56.dp),
                         shape = RoundedCornerShape(0.dp,20.dp,20.dp),
-                        colors = ButtonDefaults.buttonColors(Color(0xff035cc2))) {
+                        colors = ButtonDefaults.buttonColors(Color(0xff4CAF50))) {
                         Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "Arrow forward")
 
                     }}
@@ -257,46 +264,20 @@ fun GameScreen(navController: NavController) {
 
 
         Row (modifier = Modifier
-
+            .absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
             .height(50.dp)
             .fillMaxWidth()
             .background(Color.Transparent),
-            horizontalArrangement = Arrangement.SpaceBetween){
-            Button(onClick = { /*TODO*/ },
-                modifier = Modifier.absolutePadding(20.dp),
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(Color(0xff035cc2))) {
-                Row(modifier = Modifier
-
-                    .width(60.dp)
-                    ,horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(text = "Hint")
+            horizontalArrangement = Arrangement.Center){
+                    Row (modifier = Modifier.width(300.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween){
                     Image(painter = painterResource(id = R.drawable.light), contentDescription = "hint",)
-                }
 
-            }
-
-            Button(onClick = {
-                GlobalVariables.outcome.value = GlobalVariables.word.value
-                GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel) },
-                modifier = Modifier
-                    .width(110.dp)
-                    .absolutePadding(0.dp, 0.dp, 20.dp)
-                    .height(50.dp),
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(Color(0xff035cc2))) {
-                Text(text = "Skip",
-                    style = TextStyle(),
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
-                    fontFamily = FontFamily.Default,
-                    textAlign = TextAlign.Center,
-                    color = Color.White)
-                
-            }
+                    Image(painter = painterResource(id = R.drawable.skip), contentDescription = "skip",
+                        modifier = Modifier.clickable { GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel) })}
             GameOver()
+            PauseGame()
+
 
         }
 
@@ -441,6 +422,109 @@ fun GameOver() {
     }
 }
 
+@Composable
+fun PauseGame() {
+    AnimatedVisibility(visible = GlobalVariables.pausegame.value) {
+        Column {
+
+
+            AlertDialog(
+                onDismissRequest = { GlobalVariables.pausegame.value = false },
+                title = {
+                    Row (modifier = Modifier.width(230.dp),
+                        horizontalArrangement = Arrangement.Center){
+
+
+                        Text(text = "Game Paused!",
+                            style =  TextStyle(),
+                            fontFamily = FontFamily.SansSerif,
+                            fontSize = 30.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                },
+
+                text = {
+                    Column(modifier = Modifier
+                        .width(230.dp)
+                        .height(170.dp),
+                        verticalArrangement = Arrangement.SpaceAround,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Row (modifier = Modifier
+                            .background(Color(0xff387ADF), shape = RoundedCornerShape(10.dp))
+                            .height(40.dp)
+                            .width(230.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center){
+                            Text(text = "Continue",
+                                style =  TextStyle(),
+                                fontFamily = FontFamily.SansSerif,
+                                fontSize = 30.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.clickable { GlobalVariables.pausegame.value = false }
+                                )
+
+                        }
+                        Row (modifier = Modifier
+                            .background(Color(0xff387ADF), shape = RoundedCornerShape(10.dp))
+                            .height(40.dp)
+                            .width(230.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center){
+                            Text(text = "Restart",
+                                style =  TextStyle(),
+                                fontFamily = FontFamily.SansSerif,
+                                fontSize = 30.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.clickable { GlobalVariables.pausegame.value = false }
+                            )
+
+                        }
+
+                        Row (modifier = Modifier
+                            .background(Color(0xff387ADF), shape = RoundedCornerShape(10.dp))
+                            .height(40.dp)
+                            .width(230.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center){
+                            Text(text = "Main Menu",
+                                style =  TextStyle(),
+                                fontFamily = FontFamily.SansSerif,
+                                fontSize = 30.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.clickable { GlobalVariables.pausegame.value = false }
+                            )
+
+                        }
+
+
+                    }
+                },
+                confirmButton = {
+
+                },
+                shape = RoundedCornerShape(20.dp),
+                containerColor = Color.Transparent,
+                modifier = Modifier
+                    .width(370.dp)
+                    .height(350.dp)
+                    .background(Color.Transparent)
+                    .padding(16.dp)
+            )
+
+        }
+    }
+}
+
 fun compareWord(guess: String): Boolean {
     return GlobalVariables.word.value.lowercase() == guess.lowercase()
 }
@@ -511,5 +595,6 @@ fun instructions(): AnnotatedString{
 fun gamepreview(){
    // GameOver()
     GameScreen(rememberNavController())
+    //PauseGame()
 }
 

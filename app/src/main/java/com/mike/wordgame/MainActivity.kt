@@ -44,6 +44,8 @@ object GlobalVariables {
     var username: MutableState<String> = mutableStateOf("Mike")
     var enteredword: MutableState<String> = mutableStateOf("")
     var Gameoverdialog: MutableState<Boolean> = mutableStateOf(false)
+    var pausegame: MutableState<Boolean> = mutableStateOf(false)
+
 
 
 }
