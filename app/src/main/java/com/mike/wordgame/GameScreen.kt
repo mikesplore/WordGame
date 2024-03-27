@@ -56,6 +56,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.capitalize
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import java.io.DataInputStream
@@ -66,32 +67,46 @@ import java.io.FileInputStream
 fun GameScreen(navController: NavController) {
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(Color(0xff1985a1)),
+        .background(Color(0xff063977)),
         verticalArrangement = Arrangement.SpaceBetween
 
     ) {
         Row (modifier = Modifier
-            .height(50.dp)
+            .height(70.dp)
             .fillMaxWidth()
             .background(Color.Transparent),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically){
-            Row(modifier = Modifier.width(150.dp),
-                horizontalArrangement = Arrangement.Start) {
+
+            profile(name = GlobalVariables.username.value, profilesize = 50.dp,30.sp)
+            Row(modifier = Modifier.width(100.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Points: ${GlobalVariables.score.value}",
                         style = TextStyle(),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 20.sp,
                     fontFamily = FontFamily.Default,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = Color.White
                 )
 
             }
 
+
             Row (modifier = Modifier.width(90.dp),
                 horizontalArrangement = Arrangement.SpaceBetween){
-                Icon(imageVector = Icons.Default.Refresh, contentDescription = "restart")
-                Icon(imageVector = Icons.Outlined.ExitToApp, contentDescription = "exit")
+                Icon(imageVector = Icons.Default.Refresh, contentDescription = "restart", tint = Color.White)
+                Icon(imageVector = Icons.Outlined.ExitToApp, contentDescription = "exit", tint = Color.White,
+                    modifier = Modifier
+                        .clickable {
+                            GlobalVariables.timer.value = 60
+                            GlobalVariables.word.value= getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel)
+                            GlobalVariables.score.value = 0
+                            GlobalVariables.correctGuesscount.value = 0
+                            GlobalVariables.skippedguess.value = 0
+                            GlobalVariables.wrongGuesscount.value = 0
+                        })
             }
 
         }
@@ -116,23 +131,48 @@ fun GameScreen(navController: NavController) {
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 20.sp,
                             fontFamily = FontFamily.Default,
-                            textAlign = TextAlign.Center)}
+                            textAlign = TextAlign.Center,
+                            color = Color.White)}
 
 
                 }
                 Column(modifier = Modifier
-                    .background(Color.Gray, shape = RoundedCornerShape(30.dp))
+                    .background(Color(0xff0286df), shape = RoundedCornerShape(30.dp))
                     .height(400.dp)
                     .width(160.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceAround) {
-                    Text(text = "Level: Easy")
+                    Text(text = GlobalVariables.selectedlevel.capitalize(),
+                        style = TextStyle(),
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily.Default,
+                        textAlign = TextAlign.Center,
+                        color = Color.White)
 
                     Text(text = Timer().toString(),
                         style = TextStyle(),
                         fontFamily = FontFamily.Default,
                         fontSize = 90.sp)
-                    Text(text = "High Score: 120")
+                    Column(verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally) {
+
+                    Text(text = "High Score",
+                        style = TextStyle(),
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily.Default,
+                        textAlign = TextAlign.Center,
+                        color = Color.White
+                        )
+                        Text(text = "${GlobalVariables.high_score.value}",
+                            style = TextStyle(),
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 20.sp,
+                            fontFamily = FontFamily.Default,
+                            textAlign = TextAlign.Center,
+                            color = Color.White)
+                    }
 
                 }
 
@@ -141,7 +181,7 @@ fun GameScreen(navController: NavController) {
 
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center) {
-                Text(text = "Cars",style = TextStyle(),
+                Text(text = GlobalVariables.selectedcategory.value.capitalize(),style = TextStyle(),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 30.sp,
                     fontFamily = FontFamily.Default,
@@ -167,17 +207,32 @@ fun GameScreen(navController: NavController) {
                         ),
                         shape = RoundedCornerShape(20.dp,0.dp,0.dp,20.dp)
                     )
-                    Button(onClick = {
-                        if(compareWord(GlobalVariables.enteredword.value)){
-                            GlobalVariables.Gameoverdialog.value = true
-                            GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel)
-                        }
+                    Button(
+                        onClick = {
+                                  if (GlobalVariables.enteredword.value.isEmpty()) {
+                                    GlobalVariables.outcome.value = "Please enter a word"
+                                  }
+                            else{
+                                if(compareWord(GlobalVariables.enteredword.value)){
+                                    GlobalVariables.score.value+=5
+                                    GlobalVariables.outcome.value = GlobalVariables.word.value
+                                    GlobalVariables.timer.value+=10
+                                    GlobalVariables.Attempts.value+=1
+                                    GlobalVariables.correctGuesscount.value+=1
 
 
-                                     },
+                                    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel)
+
+                                }else{
+                                    GlobalVariables.outcome.value = GlobalVariables.enteredword.value
+                                }
+                            }
+
+                    },
                         modifier = Modifier
                             .height(56.dp),
-                        shape = RoundedCornerShape(0.dp,20.dp,20.dp)) {
+                        shape = RoundedCornerShape(0.dp,20.dp,20.dp),
+                        colors = ButtonDefaults.buttonColors(Color(0xff035cc2))) {
                         Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "Arrow forward")
 
                     }}
@@ -208,8 +263,9 @@ fun GameScreen(navController: NavController) {
             .background(Color.Transparent),
             horizontalArrangement = Arrangement.SpaceBetween){
             Button(onClick = { /*TODO*/ },
-                modifier = Modifier.absolutePadding(10.dp),
-                shape = RoundedCornerShape(20.dp)) {
+                modifier = Modifier.absolutePadding(20.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xff035cc2))) {
                 Row(modifier = Modifier
 
                     .width(60.dp)
@@ -222,18 +278,23 @@ fun GameScreen(navController: NavController) {
 
             }
 
-            Box(modifier = Modifier
-                .absolutePadding(0.dp,)
-                .background(Color.Gray, shape = RoundedCornerShape(20.dp))
-                .height(50.dp)
-                .width(90.dp),
-                contentAlignment = Alignment.Center){
-                Text(text = "Skip",style = TextStyle(),
-
+            Button(onClick = {
+                GlobalVariables.outcome.value = GlobalVariables.word.value
+                GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel) },
+                modifier = Modifier
+                    .width(110.dp)
+                    .absolutePadding(0.dp, 0.dp, 20.dp)
+                    .height(50.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xff035cc2))) {
+                Text(text = "Skip",
+                    style = TextStyle(),
+                    fontWeight = FontWeight.SemiBold,
                     fontSize = 20.sp,
                     fontFamily = FontFamily.Default,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.clickable {  })
+                    color = Color.White)
+                
             }
             GameOver()
 
@@ -302,7 +363,7 @@ fun GameOver() {
                                color = Color.Black,
 
                           )
-                           Text(text = "300",
+                           Text(text = "${GlobalVariables.score.value}",
                                style = TextStyle(),
                                fontWeight = FontWeight.Bold,
                                fontSize = 50.sp,
@@ -381,23 +442,10 @@ fun GameOver() {
 }
 
 fun compareWord(guess: String): Boolean {
-    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel)
     return GlobalVariables.word.value.lowercase() == guess.lowercase()
 }
 
 
-
-fun showCorrectLetters(actualWord: String, guessedWord: String): String {
-    var result = ""
-    for ((actualLetter, guessedLetter) in actualWord.zip(guessedWord)) {
-        result += if (actualLetter.lowercase() == guessedLetter.lowercase()) {
-            "$actualLetter "
-        } else {
-            "_ "
-        }
-    }
-    return result.trim().lowercase()
-}
 
 // Function to save data to internal storage
 fun saveIntToInternalStorage(context: Context, value: Int) {
@@ -441,17 +489,17 @@ fun instructions(): AnnotatedString{
     val description = buildAnnotatedString {
         append("Enter a word of ")
         withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold, fontSize = 25.sp,
-            color = Color(0xff0e213f))
+            color = Color(0xff00b0fc))
         ) {
             append("$length")
         }
         append(" letters that starts with ")
-        withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold,fontSize = 25.sp,color = Color(0xff0e213f))
+        withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold,fontSize = 25.sp,color = Color(0xff00b0fc))
         ) {
             append(first.lowercase())
         }
         append(" and ends with ")
-        withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold,color = Color(0xff0e213f),fontSize = 25.sp)
+        withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold,color = Color(0xff00b0fc),fontSize = 25.sp)
         ) {
             append("$last")
         }

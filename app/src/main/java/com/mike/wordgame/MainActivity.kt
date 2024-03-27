@@ -14,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
@@ -28,22 +29,20 @@ import com.mike.wordgame.ui.theme.WordGameTheme
 
 object GlobalVariables {
     var outcome: MutableState<String> = mutableStateOf("Outcome")
-    var score: MutableState<Int> = mutableStateOf(0)
+    var score: MutableState<Int> = mutableIntStateOf(0)
     var text: MutableState<String> = mutableStateOf("")
-    var high_score: MutableState<Int> = mutableStateOf(0)
-    var outcomeColor: MutableState<Color> = mutableStateOf(Color(0xff424769))
-    var selectedcategory: MutableState<String> = mutableStateOf("")
-    var selectedlevel: String = "hard"
+    var high_score: MutableState<Int> = mutableIntStateOf(0)
+    var selectedcategory: MutableState<String> = mutableStateOf("animals")
+    var selectedlevel: String = "beginner"
     var word: MutableState<String> = mutableStateOf(getRandomWord(selectedcategory.value, selectedlevel))
-    var timer: MutableState<Int> = mutableStateOf(20)
+    var timer: MutableState<Int> = mutableIntStateOf(100)
     var timerRunning: MutableState<Boolean> = mutableStateOf(true)
-    var correctGuesscount: MutableState<Int> = mutableStateOf(0)
-    var wrongGuesscount: MutableState<Int> = mutableStateOf(0)
-    var skippedguess: MutableState<Int> = mutableStateOf(0)
-    var Attempts: MutableState<Int> = mutableStateOf(0)
-    var username: MutableState<String> = mutableStateOf("")
+    var correctGuesscount: MutableState<Int> = mutableIntStateOf(0)
+    var wrongGuesscount: MutableState<Int> = mutableIntStateOf(0)
+    var skippedguess: MutableState<Int> = mutableIntStateOf(0)
+    var Attempts: MutableState<Int> = mutableIntStateOf(0)
+    var username: MutableState<String> = mutableStateOf("Mike")
     var enteredword: MutableState<String> = mutableStateOf("")
-    var hintbackground: MutableState<Color> = mutableStateOf(Color(0x00FFFFFF))
     var Gameoverdialog: MutableState<Boolean> = mutableStateOf(false)
 
 

@@ -42,6 +42,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -86,7 +88,7 @@ Column(modifier = Modifier
         .height(200.dp)
         .fillMaxWidth(),
         contentAlignment = Alignment.Center){
-        Imageselect(name = username)
+        profile(name = username,200.dp,170.sp)
     }
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -123,7 +125,7 @@ fun ProceedToGameButton(navController: NavController){
 
 
 @Composable
-fun Imageselect(name: String) {
+fun profile(name: String, profilesize: Dp, lettersize: TextUnit) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         imageUri = uri
@@ -134,7 +136,7 @@ fun Imageselect(name: String) {
         {
             Box(
                 modifier = Modifier
-                    .size(200.dp)
+                    .size(profilesize)
                     .background(Color.White, shape = CircleShape)
                     .border(3.dp, color = Color(0xff67C6E3), shape = CircleShape)
                     .clickable {
@@ -151,7 +153,7 @@ fun Imageselect(name: String) {
                     ),
                     contentDescription = "profile",
                     modifier = Modifier
-                        .size(200.dp)
+                        .size(profilesize)
                         .clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
@@ -162,7 +164,7 @@ fun Imageselect(name: String) {
         {
             Box(
                 modifier = Modifier
-                    .size(200.dp)
+                    .size(profilesize)
                     .background(brush = backbrush , shape = CircleShape)
                     .border(3.dp, color = Color(0xff67C6E3), shape = CircleShape)
                     .clickable {
@@ -173,7 +175,7 @@ fun Imageselect(name: String) {
                 Text(
                     text = name.take(1).capitalize(),
                     style = TextStyle(
-                        fontSize = 170.sp,
+                        fontSize = lettersize,
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.Bold
                     ),
