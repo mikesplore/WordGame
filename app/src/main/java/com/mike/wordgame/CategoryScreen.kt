@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -77,17 +78,9 @@ fun CategorySCreen(navController: NavController) {
         verticalArrangement = Arrangement.SpaceAround
     ) {
             Column(modifier= Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.SpaceEvenly,
+                verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally)
             {
-                Row (modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                        contentDescription = "arrow back",
-                        modifier = Modifier.clickable { navController.popBackStack() }
-                    )
-                }
 
                 Text(text = "CATEGORY",
                     style = TextStyle(
@@ -97,7 +90,6 @@ fun CategorySCreen(navController: NavController) {
                         fontFamily = FontFamily.Serif)
                     )
             }
-
         // Select a Category Text
         Row(modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
@@ -165,22 +157,42 @@ fun CategorySCreen(navController: NavController) {
         }
 
         // Play Game Button
-        Box(
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            horizontalArrangement = Arrangement.SpaceEvenly
+
         ) {
+            Button(onClick = {
+
+                navController.popBackStack() },
+                modifier = Modifier
+                    .width(135.dp)
+                    .height(40.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xff2196F3)),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp),
+                shape = RoundedCornerShape(10.dp)) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "arrow", tint = Color.Black)
+                Text(text = "  Back",style = TextStyle(), fontSize = 15.sp,
+                    fontFamily = FontFamily.Serif,
+                    color=Color.White,
+                    fontWeight = FontWeight.Bold)
+
+
+            }
+
             Button(onClick = {
 
                 navController.navigate("LevelScreen") },
                 modifier = Modifier
                     .width(130.dp)
-                    .height(50.dp),
+                    .height(40.dp),
                 colors = ButtonDefaults.buttonColors(Color(0xff2196F3)),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp),
                 shape = RoundedCornerShape(10.dp)) {
 
-                Text(text = "Next  ",style = TextStyle(), fontSize = 20.sp,
-                    fontFamily = FontFamily.Serif,color=Color.Black,
+                Text(text = "Next  ",style = TextStyle(), fontSize = 15.sp,
+                    fontFamily = FontFamily.Serif,
+                    color=Color.White,
                     fontWeight = FontWeight.Bold)
                 Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "arrow", tint = Color.Black)
 
@@ -206,7 +218,10 @@ fun CategoryButton(
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
     ) {
         Text(text = label,
-            style = TextStyle(), fontFamily = FontFamily.Serif
+            style = TextStyle(),
+            fontFamily = FontFamily.Serif,
+            color = Color.White
+
        )
 
     }

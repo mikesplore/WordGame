@@ -52,7 +52,7 @@ fun LevelScreen(navController: NavController){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xff1F2138)),
+                .background(brush = backbrush),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -91,7 +91,8 @@ fun LevelScreen(navController: NavController){
                         GlobalVariables.timer.value = 60
                         GlobalVariables.score.value = 0
                         navController.navigate("GameScreen") },
-                    colors = ButtonDefaults.buttonColors(Color(0xffF6B17A)),
+                    colors = ButtonDefaults.buttonColors(Color(0xff2196F3)),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp),
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
                         .absolutePadding(0.dp, 0.dp, 0.dp, 30.dp)
@@ -104,7 +105,7 @@ fun LevelScreen(navController: NavController){
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = FontFamily.Serif,
                         fontSize = 20.sp,
-                        color = Color(0xff1F2138)
+                        color = Color.White
                     )
 
                 }
@@ -194,11 +195,15 @@ fun LevelButton(
         onClick = { onlevelSelected(level) },
         modifier = Modifier.width(121.dp),
         colors = ButtonDefaults.buttonColors(
-            Color(if (selectedLevel == level) 0xffF6B17A else 0xff7077A1)
-        )
+            Color(if (selectedLevel == level) 0xff00008B else 0xff2196F3)),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp),
+
+
     ) {
         Text(text = label,
-            style = TextStyle(), fontFamily = FontFamily.Serif
+            style = TextStyle(),
+            fontFamily = FontFamily.Serif,
+            color = Color.White
         )
 
     }

@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.androidx.material3.android)
     implementation ("io.coil-kt:coil-compose:2.2.2")
     implementation ("androidx.activity:activity-compose:1.6.1")
+    implementation(libs.androidx.benchmark.macro)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
