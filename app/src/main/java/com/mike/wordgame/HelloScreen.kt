@@ -64,7 +64,7 @@ val backbrush  = Brush.verticalGradient(
 fun HelloScreen(navController: NavController){
     val username = GlobalVariables.username.value
 Column(modifier = Modifier
-    .background(brush = backbrush)
+    .background(brush = back)
     .fillMaxSize(),
     verticalArrangement = Arrangement.SpaceAround,
     horizontalAlignment = Alignment.CenterHorizontally) {

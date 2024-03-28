@@ -52,7 +52,7 @@ fun LevelScreen(navController: NavController){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(brush = backbrush),
+                .background(brush = back),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

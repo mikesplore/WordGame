@@ -73,7 +73,7 @@ fun CategorySCreen(navController: NavController) {
 
     Column(
         modifier = Modifier
-            .background(brush = backbrush)
+            .background(brush = back)
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround
     ) {

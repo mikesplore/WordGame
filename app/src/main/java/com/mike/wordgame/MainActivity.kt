@@ -45,6 +45,9 @@ object GlobalVariables {
     var enteredword: MutableState<String> = mutableStateOf("")
     var Gameoverdialog: MutableState<Boolean> = mutableStateOf(false)
     var pausegame: MutableState<Boolean> = mutableStateOf(false)
+    var outcomecolor: MutableState<Color> = mutableStateOf(Color.Transparent)
+    var outcometextcolor: MutableState<Color> = mutableStateOf(Color.White)
+    var hint: MutableState<String> = mutableStateOf("")
 
 
 
@@ -104,6 +107,7 @@ fun MyScreens() {
         composable("HelloScreen") { HelloScreen(navController ) }
         composable("Usernames") { SavedUsernames(navController) }
         composable("profile") { Profile(navController) }
+        composable("settings") { Settings(navController) }
 
 
 

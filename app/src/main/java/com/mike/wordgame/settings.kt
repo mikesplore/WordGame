@@ -37,20 +37,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+val sback = Brush.verticalGradient(
+    colors = listOf(
+        Color(0xff07417d),
+        Color(0xff03172b),
+        Color(0xff348feb),
+        Color(0xff5ba7f5),
 
+    )
+)
 @Composable
 fun Settings(navController: NavController){
-    val forebrush  = Brush.verticalGradient(
-        colors = listOf(
-            Color(0xff00008B), // Blue
-            Color(0xff2196F3), // Light Blue 0xff00008B
-            Color(0xff2196F3)
 
-        )
-    )
 
     Column(modifier = Modifier
-        .background(brush = forebrush)
+        .background(brush = sback)
         .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
@@ -75,7 +76,7 @@ fun Settings(navController: NavController){
 
         }
         Column(modifier = Modifier
-            .background(brush = backbrush, shape = RoundedCornerShape(30.dp, 30.dp))
+            .background(brush = back, shape = RoundedCornerShape(30.dp, 30.dp))
             .fillMaxWidth()
             .height(750.dp)) {
             Spacer(modifier = Modifier.height(25.dp),)

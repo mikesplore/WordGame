@@ -102,7 +102,7 @@ fun SavedUsernames(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .background(Color(0xff1F2138))
+                .background(brush = back)
                 .padding(horizontal = 16.dp)
                 .padding(top = 57.dp), // Adjust top padding to push content below app bar
             verticalArrangement = Arrangement.spacedBy(8.dp),

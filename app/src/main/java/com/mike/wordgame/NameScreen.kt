@@ -77,7 +77,7 @@ fun NameScreen(navController: NavController){
         exit = fadeOut() + slideOutVertically()
     ) {
     Column(modifier = Modifier
-        .background(brush = backbrush)
+        .background(brush = back)
         .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly){
