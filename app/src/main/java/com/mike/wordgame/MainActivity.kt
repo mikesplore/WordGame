@@ -3,6 +3,7 @@ package com.mike.wordgame
 import android.annotation.SuppressLint
 import android.content.Context
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,9 +24,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mike.wordgame.ui.theme.WordGameTheme
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 object GlobalVariables {
     var outcome: MutableState<String> = mutableStateOf("Outcome")
@@ -35,7 +39,7 @@ object GlobalVariables {
     var selectedcategory: MutableState<String> = mutableStateOf("animals")
     var selectedlevel: String = "beginner"
     var word: MutableState<String> = mutableStateOf(getRandomWord(selectedcategory.value, selectedlevel))
-    var timer: MutableState<Int> = mutableIntStateOf(100)
+    var timer: MutableState<Int> = mutableIntStateOf(60)
     var timerRunning: MutableState<Boolean> = mutableStateOf(true)
     var correctGuesscount: MutableState<Int> = mutableIntStateOf(0)
     var wrongGuesscount: MutableState<Int> = mutableIntStateOf(0)
@@ -51,29 +55,22 @@ object GlobalVariables {
 
 
 
+
 }
-class BackgroundMusic(context: Context) {
-    private val mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.game_music_loop)
+class ProfileViewModel : ViewModel() {
+    private val _imageUri = MutableStateFlow<Uri?>(null)
+    val imageUri: StateFlow<Uri?> = _imageUri
 
-    fun start() {
-        mediaPlayer.isLooping = true
-        mediaPlayer.start()
-    }
-
-    fun stop() {
-        mediaPlayer.stop()
-        mediaPlayer.release()
+    fun setImageUri(uri: Uri?) {
+        _imageUri.value = uri
     }
 }
 
 class MainActivity : ComponentActivity() {
-    private lateinit var backgroundMusic: BackgroundMusic
-
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        backgroundMusic = BackgroundMusic(this)
-        backgroundMusic.start()
+
 
         enableEdgeToEdge()
         setContent {
@@ -86,12 +83,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    override fun onDestroy() {
-        super.onDestroy()
 
-        // Stop and release background music
-        backgroundMusic.stop()
-    }
 }
 
 
@@ -103,9 +95,7 @@ fun MyScreens() {
         composable("GameSummaryScreen") { GameSummaryScreen(navController) }
         composable("CategoryScreen") { CategoryScreen(navController) }
         composable("NameScreen") { NameScreen(navController) }
-        composable("LevelScreen") { LevelScreen(navController) }
         composable("HelloScreen") { HelloScreen(navController ) }
-        composable("Usernames") { SavedUsernames(navController) }
         composable("profile") { Profile(navController) }
         composable("settings") { Settings(navController) }
 

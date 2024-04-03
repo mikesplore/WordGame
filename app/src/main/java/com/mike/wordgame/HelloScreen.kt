@@ -26,7 +26,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,10 +46,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 val backbrush  = Brush.verticalGradient(
     colors = listOf(
@@ -62,6 +66,8 @@ val backbrush  = Brush.verticalGradient(
 
 @Composable
 fun HelloScreen(navController: NavController){
+    val viewModel = remember { ProfileViewModel() }
+
     val username = GlobalVariables.username.value
 Column(modifier = Modifier
     .background(brush = back)
@@ -88,7 +94,7 @@ Column(modifier = Modifier
         .height(200.dp)
         .fillMaxWidth(),
         contentAlignment = Alignment.Center){
-        profile(name = username,200.dp,170.sp)
+        profile(name = username,200.dp,170.sp,viewModel)
     }
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -124,11 +130,18 @@ fun ProceedToGameButton(navController: NavController){
 } //2130968591
 
 
+
 @Composable
-fun profile(name: String, profilesize: Dp, lettersize: TextUnit) {
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+fun profile(
+    name: String,
+    profilesize: Dp,
+    lettersize: TextUnit,
+    viewModel: ProfileViewModel // ViewModel to hold the state
+) {
+    val imageUri by viewModel.imageUri.collectAsState()
+
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        imageUri = uri
+        viewModel.setImageUri(uri)
     }
 
     val displayContent: @Composable () -> Unit = if (imageUri != null) {
@@ -146,10 +159,7 @@ fun profile(name: String, profilesize: Dp, lettersize: TextUnit) {
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(data = imageUri)
-                            .crossfade(true)
-                            .build()
+                        model = imageUri
                     ),
                     contentDescription = "profile",
                     modifier = Modifier
@@ -185,10 +195,9 @@ fun profile(name: String, profilesize: Dp, lettersize: TextUnit) {
         }
     }
 
-
-        displayContent()
-
+    displayContent()
 }
+
 
 
 

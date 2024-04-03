@@ -57,8 +57,7 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import android.content.Context
 import android.media.MediaPlayer
-
-
+import androidx.compose.runtime.mutableIntStateOf
 
 
 @Composable
@@ -95,7 +94,7 @@ fun NameScreen(navController: NavController){
 fun NameEntryScreen(navController: NavController, onNameEntered: (String) -> Unit) {
     var entername by remember { mutableStateOf("Hello, there!")}
     var clicked by remember { mutableStateOf(true )}
-    var textcolor by remember{(mutableStateOf(Color.Black))}
+    var textcolor by remember{(mutableStateOf(Color.White))}
 
     Column(modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -323,15 +322,12 @@ fun TypewriterText(
 fun Logo() {
     // Define a list of image resources
     val images = listOf(
-        R.drawable.images2,
-        R.drawable.images3,
-        R.drawable.images4,
         R.drawable.images5
 
     )
 
     // Keep track of the current index to select the image from the list
-    var imageIndex by remember { mutableStateOf(0) }
+    var imageIndex by remember { mutableIntStateOf(0) }
 
     var isVisible by remember { mutableStateOf(true) }
 
@@ -387,7 +383,7 @@ fun Logo() {
 
 
 
-@Preview(heightDp = 850)
+@Preview()
 @Composable
 fun NameScreenPreview(){
     NameScreen(navController = rememberNavController())

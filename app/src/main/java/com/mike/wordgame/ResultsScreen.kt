@@ -61,7 +61,7 @@ fun ResultScreen(navController: NavController) {
     val context = LocalContext.current
     LaunchedEffect(Unit) {
 
-        GlobalVariables.high_score.value = getIntFromInternalStorage(context)
+
 
     }
 

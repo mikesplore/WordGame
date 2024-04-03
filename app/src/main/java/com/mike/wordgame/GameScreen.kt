@@ -34,6 +34,9 @@ import java.io.IOException
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.fadeIn
@@ -42,6 +45,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -49,21 +53,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Refresh
-
 import androidx.compose.material.icons.rounded.Settings
-
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-
 import kotlinx.coroutines.delay
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.capitalize
@@ -83,8 +87,9 @@ val back = Brush.verticalGradient(
 )
 @Composable
 fun GameScreen(navController: NavController) {
+    val context = LocalContext.current
     val timerValue = GlobalVariables.timer.value
-
+    val viewModel = remember { ProfileViewModel() }
 
     Box {
 
@@ -95,64 +100,57 @@ fun GameScreen(navController: NavController) {
 
     ) {
         Row (modifier = Modifier
-            .absolutePadding(0.dp, 20.dp)
+            .absolutePadding(0.dp, 30.dp)
             .height(60.dp)
             .fillMaxWidth()
             .background(Color.Transparent),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically){
+            Row(modifier = Modifier.width(120.dp),
+                horizontalArrangement = Arrangement.SpaceAround) {
+                Box(
+                    modifier = Modifier
+                        .background(Color(0xff5ba7f5), shape = CircleShape)
+                        .size(45.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(painter = painterResource(id = R.drawable.pause),
+                        contentDescription = "pause",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .clickable {
+                                GlobalVariables.pausegame.value = true
+                                GlobalVariables.timerRunning.value = false
+                                GlobalVariables.outcome.value = "Game Paused"
+                            }
+                            .size(30.dp))
+                }
 
-            Box(modifier = Modifier
-                .background(Color(0xff5ba7f5), shape = CircleShape)
-                .size(45.dp),
-                contentAlignment = Alignment.Center){
-            Icon(painter = painterResource(id = R.drawable.pause),
-                contentDescription = "pause",
-                tint = Color.White,
-                modifier = Modifier
-                    .clickable {
-                        GlobalVariables.pausegame.value = true
+            }
+            ScoreAndTimer()
+            Row(modifier = Modifier.width(120.dp),
+                horizontalArrangement = Arrangement.Center){
+
+                Box(
+                    modifier = Modifier
+                        .size(50.dp)
+                        .background(Color.Transparent),
+                    contentAlignment = Alignment.Center
+                ) {
+                    profile(name = GlobalVariables.username.value, profilesize = 50.dp, 30.sp,viewModel)
+                    Box(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .background(Color.Transparent),
+                        contentAlignment = Alignment.Center
+                    ) {
+
                     }
-                    .size(30.dp))}
-            Box(modifier = Modifier
-                .size(50.dp)
-                .background(Color.Transparent),
-                contentAlignment = Alignment.Center){
-                profile(name = GlobalVariables.username.value, profilesize = 50.dp,30.sp)
-                Box(modifier = Modifier
-                    .size(50.dp)
-                    .background(Color.Transparent),
-                    contentAlignment = Alignment.Center){
-
                 }
             }
-            Row(modifier = Modifier
-                .background(Color(0xff5ba7f5), shape = RoundedCornerShape(30.dp))
-                .height(50.dp)
-                .width(100.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically) {
-
-                Text(text = "${GlobalVariables.timer.value}",
-                        style = TextStyle(),
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
-                    fontFamily = FontFamily.Default,
-                    textAlign = TextAlign.Center,
-                    color = Color.White
-                )
-
-            }
-            Box(modifier = Modifier
-                .background(Color(0xff5ba7f5), shape = CircleShape)
-                .size(45.dp),
-                contentAlignment = Alignment.Center){
-                Icon(imageVector = Icons.Rounded.Settings, contentDescription = "settings", tint = Color.White,
-                    modifier = Modifier.clickable { navController.navigate("settings") })
-            }
-
 
         }
+
         Column(modifier = Modifier
             .height(700.dp)
             .fillMaxWidth(),
@@ -169,105 +167,13 @@ fun GameScreen(navController: NavController) {
                     fontSize = 20.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = Color(0xff323e57)
                     )
                 Timer()
 
-                TimeTracker(timerValue = timerValue,100)
+                TimeTracker(timerValue = timerValue,60)
             }
-
-
-
-            Row (modifier = Modifier
-
-                .height(100.dp)
-                .width(270.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center){
-                Text(text = instructions(),
-                    style = TextStyle(),
-                    fontSize = 20.sp,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Normal,
-                    textAlign = TextAlign.Center
-               )
-
-            }
-            Row(modifier= Modifier
-                .height(100.dp)
-                .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center) {
-                RulesAndAOB()
-
-            }
-            Row(modifier = Modifier
-                .height(65.dp)
-                .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Row() {
-
-
-                    TextField(
-                        value = GlobalVariables.enteredword.value, textStyle = TextStyle(
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = FontFamily.Monospace,
-                            fontSize = 20.sp,
-                            color = Color.Black
-                        ),
-                        onValueChange = {GlobalVariables.enteredword.value = it},
-                        label = { Text(text = "Word")
-                        }, colors = TextFieldDefaults.colors(
-                            unfocusedContainerColor = Color(0xff5ba7f5),
-                            focusedContainerColor = Color(0xff5ba7f5),
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedLabelColor = Color.White,
-                            unfocusedLabelColor = Color.Black,
-
-
-
-
-                        ),
-                        shape = RoundedCornerShape(20.dp,0.dp,0.dp,20.dp),
-                        singleLine = true
-                    )
-                    Button(
-                        onClick = {
-                                  if (GlobalVariables.enteredword.value.isEmpty()) {
-                                    GlobalVariables.outcome.value = "Please enter a word"
-                                  }
-                            else{
-                                if(compareWord(GlobalVariables.enteredword.value)){
-                                    GlobalVariables.score.value+=5
-                                    GlobalVariables.outcome.value = GlobalVariables.word.value
-                                    GlobalVariables.timer.value+=10
-                                    GlobalVariables.Attempts.value+=1
-                                    GlobalVariables.correctGuesscount.value+=1
-                                    GlobalVariables.outcomecolor.value = Color.Green
-                                    GlobalVariables.enteredword.value = ""
-                                    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel)
-                                    GlobalVariables.outcometextcolor.value = Color.Black
-
-                                }else{
-                                    GlobalVariables.outcome.value = GlobalVariables.enteredword.value
-                                    GlobalVariables.outcomecolor.value = Color.Red
-                                    GlobalVariables.outcometextcolor.value = Color.Black
-                                }
-                            }
-
-                    },
-                        modifier = Modifier
-                            .height(55.dp),
-                        shape = RoundedCornerShape(0.dp,20.dp,20.dp),
-                        colors = ButtonDefaults.buttonColors(Color(0xff03172b))) {
-                        Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "Arrow forward")
-
-                    }}
-
-            }
-
 
             Row(modifier = Modifier
                 .background(
@@ -287,6 +193,114 @@ fun GameScreen(navController: NavController) {
                     color = GlobalVariables.outcometextcolor.value)
 
             }
+
+
+            Row (modifier = Modifier
+
+                .height(100.dp)
+                .width(270.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center){
+                Text(text = instructions(),
+                    style = TextStyle(),
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center,
+                    color = Color.White
+
+               )
+
+            }
+            Row(modifier= Modifier
+                .height(100.dp)
+                .fillMaxWidth(),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.Center) {
+                RulesAndAOB()
+
+            }
+            Row(modifier = Modifier
+                .height(60.dp)
+                .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+
+
+                    TextField(
+                        value = GlobalVariables.enteredword.value, textStyle = TextStyle(
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        ),
+                        onValueChange = {GlobalVariables.enteredword.value = it},
+                        label = { Text(text = "Word")
+                        }, colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color(0xff5ba7f5),
+                            focusedContainerColor = Color(0xff5ba7f5),
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
+                            focusedLabelColor = Color.White,
+                            unfocusedLabelColor = Color.Black,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+
+
+
+
+                        ),
+                        shape = RoundedCornerShape(20.dp,0.dp,0.dp,20.dp),
+                        singleLine = true,
+                        modifier = Modifier.fillMaxHeight()
+                    )
+                    Button(
+                        onClick = {
+                                  if (GlobalVariables.enteredword.value.isEmpty()) {
+                                    GlobalVariables.outcome.value = "Please enter a word"
+                                  }
+                            else{
+                                if(compareWord(GlobalVariables.enteredword.value)){
+                                    GlobalVariables.score.value+=5
+                                    if(GlobalVariables.score.value>GlobalVariables.high_score.value){
+                                        GlobalVariables.high_score.value= GlobalVariables.score.value
+                                        saveIntToInternalStorage(context = context,GlobalVariables.high_score.value)
+
+                                    }
+
+                                    GlobalVariables.outcome.value = GlobalVariables.word.value
+                                    GlobalVariables.timer.value+=10
+                                    GlobalVariables.Attempts.value+=1
+                                    GlobalVariables.correctGuesscount.value+=1
+                                    GlobalVariables.outcomecolor.value = Color.Green
+                                    GlobalVariables.enteredword.value = ""
+                                    GlobalVariables.word.value = getRandomWord(GlobalVariables.selectedcategory.value,GlobalVariables.selectedlevel)
+                                    GlobalVariables.outcometextcolor.value = Color.Black
+
+                                }else{
+                                    GlobalVariables.outcome.value = GlobalVariables.enteredword.value
+                                    GlobalVariables.outcomecolor.value = Color.Red
+                                    GlobalVariables.outcometextcolor.value = Color.Black
+                                }
+                            }
+
+                    },
+                        modifier = Modifier
+                            .fillMaxHeight(),
+                        shape = RoundedCornerShape(0.dp,20.dp,20.dp),
+                        colors = ButtonDefaults.buttonColors(Color(0xff03172b))
+                    )
+                    {
+                        Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "Arrow forward")
+
+                    }}
+
+            }
+
+
+
             Row (modifier = Modifier
                 .absolutePadding(0.dp, 0.dp, 0.dp, 10.dp)
                 .height(50.dp)
@@ -337,7 +351,7 @@ fun GameScreen(navController: NavController) {
 
     }
         GameOver()
-        PauseGame()
+        PauseGame(rememberNavController())
 }
     LaunchedEffect(
         GlobalVariables.outcome.value,
@@ -370,6 +384,66 @@ fun Timer(): Int{
     return GlobalVariables.timer.value
 }
 @Composable
+fun ScoreAndTimer() {
+    val showScore = remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(3000) // Wait for 3 seconds
+            showScore.value = !showScore.value // Toggle between showing score and timer
+            delay(1000) // Delay before the next content shows
+        }
+    }
+
+    Column(
+        modifier = Modifier.width(160.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        AnimatedVisibility(
+            visible = showScore.value,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            RowContent("${GlobalVariables.timer.value}")
+        }
+
+        AnimatedVisibility(
+            visible = !showScore.value,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            RowContent("${GlobalVariables.score.value}")
+        }
+    }
+}
+
+
+
+@Composable
+fun RowContent(text: String) {
+
+    Row(
+        modifier = Modifier
+            .background(Color(0xff5ba7f5), shape = RoundedCornerShape(30.dp))
+            .height(50.dp)
+            .width(160.dp),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = text,
+            style = TextStyle(
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 30.sp,
+                fontFamily = FontFamily.Default,
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
+        )
+    }
+}
+@Composable
 fun TimeTracker(timerValue: Int, maxValue: Int) {
     val progress = if (maxValue != 0) {
         timerValue.toFloat() / maxValue.toFloat()
@@ -390,9 +464,6 @@ fun TimeTracker(timerValue: Int, maxValue: Int) {
 
     )
 }
-
-
-
 
 
 @Composable
@@ -471,7 +542,15 @@ fun GameOver() {
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Column(
+                                    modifier = Modifier.clickable {
+                                        GlobalVariables.timer.value = 60
+                                        GlobalVariables.timerRunning.value = true
+                                        GlobalVariables.score.value = 0
+                                        GlobalVariables.correctGuesscount.value = 0
+                                        GlobalVariables.wrongGuesscount.value = 0
+                                        GlobalVariables.Gameoverdialog.value = false },
+                                    horizontalAlignment = Alignment.CenterHorizontally) {
                                     Text(
                                         "Play again",
                                         style = TextStyle(
@@ -533,36 +612,7 @@ fun compareWord(guess: String): Boolean {
 
 
 // Function to save data to internal storage
-fun saveIntToInternalStorage(context: Context, value: Int) {
-    try {
-        val fos: FileOutputStream = context.openFileOutput("HighScore.txt", Context.MODE_PRIVATE)
-        val dataOutputStream = DataOutputStream(fos)
-        dataOutputStream.writeInt(value)
-        dataOutputStream.close()
-        fos.close()
-    } catch (e: IOException) {
-        e.printStackTrace()
-        // Handle the error, e.g., show a toast message
-        Toast.makeText(context, "Error saving score", Toast.LENGTH_SHORT).show()
 
-    }
-}
-fun getIntFromInternalStorage(context: Context): Int {
-    var value = 0 // Default value if the file or data is not found
-    try {
-        val fis: FileInputStream = context.openFileInput("HighScore.txt")
-        val dataInputStream = DataInputStream(fis)
-        value = dataInputStream.readInt()
-        dataInputStream.close()
-        fis.close()
-    } catch (e: IOException) {
-        e.printStackTrace()
-        // Handle the error, e.g., show a toast message
-        Toast.makeText(context, "High Score initialized to zero", Toast.LENGTH_SHORT).show()
-
-    }
-    return value
-}
 
 
 @Composable
@@ -570,21 +620,22 @@ fun instructions(): AnnotatedString{
     val length = GlobalVariables.word.value.length
     val first = GlobalVariables.word.value.first()
     val last = GlobalVariables.word.value.last()
+    val viewModel = remember { ProfileViewModel() }
 
     val description = buildAnnotatedString {
         append("Enter a word of ")
         withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold, fontSize = 25.sp,
-            color = Color(0xff042445))
+            color = Color(0xfff7b707))
         ) {
             append("$length")
         }
         append(" letters that starts with ")
-        withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold,fontSize = 25.sp,color = Color(0xff042445))
+        withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold,fontSize = 25.sp,color = Color(0xfff7b707))
         ) {
             append(first.lowercase())
         }
         append(" and ends with ")
-        withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold,color = Color(0xff042445),fontSize = 25.sp)
+        withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold,color = Color(0xfff7b707),fontSize = 25.sp)
         ) {
             append("$last")
         }
@@ -593,7 +644,9 @@ fun instructions(): AnnotatedString{
 }
 
 @Composable
-fun PauseGame(){
+fun PauseGame(navController: NavController){
+    val context = LocalContext.current
+    val viewModel = remember { ProfileViewModel() }
     AnimatedVisibility(visible = GlobalVariables.pausegame.value) {
         
 
@@ -606,12 +659,27 @@ fun PauseGame(){
             .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "Game Paused",
-                        style = TextStyle(),
-                        fontSize = 35.sp,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.White)
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround) {
+                Row(modifier = Modifier.width(20.dp)){
+
+                }
+                Text(
+                    text = "Game Paused",
+                    style = TextStyle(),
+                    fontSize = 35.sp,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.White
+                )
+                Box(modifier = Modifier
+                    .background(Color(0xff5ba7f5), shape = CircleShape)
+                    .size(45.dp),
+                contentAlignment = Alignment.Center){
+                Icon(imageVector = Icons.Rounded.Settings, contentDescription = "settings", tint = Color.White,
+                    modifier = Modifier.clickable { navController.navigate("settings") })
+            }
+            }
 
                     Column(modifier = Modifier.size(250.dp),
                         verticalArrangement = Arrangement.SpaceAround,
@@ -619,7 +687,8 @@ fun PauseGame(){
                         profile(
                             name = GlobalVariables.username.value,
                             profilesize = 150.dp,
-                            lettersize =100.sp )
+                            lettersize =100.sp,
+                            viewModel = viewModel )
 
 
                         Text(
@@ -652,6 +721,7 @@ fun PauseGame(){
                     fontWeight = FontWeight.Normal,
                     color = Color.White
                 )
+                GlobalVariables.high_score.value = getIntFromInternalStorage(context = context)
                 Text(
                     text = "${GlobalVariables.high_score.value}",
                     style = TextStyle(),
@@ -684,6 +754,19 @@ fun PauseGame(){
             Row (modifier = Modifier
                 .background(Color(0xff00b0fc), shape = RoundedCornerShape(20.dp))
                 .height(40.dp)
+                .clickable {
+                    GlobalVariables.timerRunning.value = true
+                    GlobalVariables.timer.value = 60
+                    GlobalVariables.score.value = 0
+                    GlobalVariables.word.value = getRandomWord(
+                        GlobalVariables.selectedcategory.value,
+                        GlobalVariables.selectedlevel
+                    )
+                    GlobalVariables.correctGuesscount.value = 0
+                    GlobalVariables.wrongGuesscount.value = 0
+                    GlobalVariables.Attempts.value = 0
+                    GlobalVariables.pausegame.value = false
+                }
                 .width(200.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center){
@@ -755,12 +838,52 @@ fun RulesAndAOB() {
                 fontSize = 15.sp,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.White
            )
         }
     }
 }
 
+// Call this function when you want to save an integer value
+fun saveIntToInternalStorage(context: Context, value: Int) {
+    try {
+        // Open a file output stream to write data to a file named "HighScore.txt"
+        val fos: FileOutputStream = context.openFileOutput("HighScore.txt", Context.MODE_PRIVATE)
+        // Create a DataOutputStream to write primitive data types to the file
+        val dataOutputStream = DataOutputStream(fos)
+        // Write the integer value to the file
+        dataOutputStream.writeInt(value)
+        // Close the streams
+        dataOutputStream.close()
+        fos.close()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        // Handle the error, e.g., show a toast message
+        Toast.makeText(context, "Error saving score", Toast.LENGTH_SHORT).show()
+    }
+}
+
+// Call this function when you want to retrieve the previously saved integer value
+fun getIntFromInternalStorage(context: Context): Int {
+    var value = 0 // Default value if the file or data is not found
+    try {
+        // Open a file input stream to read data from the file "HighScore.txt"
+        val fis: FileInputStream = context.openFileInput("HighScore.txt")
+        // Create a DataInputStream to read primitive data types from the file
+        val dataInputStream = DataInputStream(fis)
+        // Read the integer value from the file
+        value = dataInputStream.readInt()
+        // Close the streams
+        dataInputStream.close()
+        fis.close()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        // Handle the error, e.g., show a toast message
+        Toast.makeText(context, "High Score initialized to zero", Toast.LENGTH_SHORT).show()
+    }
+    return value // Return the retrieved integer value
+}
 
 
 
@@ -770,6 +893,6 @@ fun RulesAndAOB() {
 fun gamepreview(){
    //GameOver()
     GameScreen(rememberNavController())
-    //PauseGame()
+    //PauseGame(rememberNavController())
 }
 
