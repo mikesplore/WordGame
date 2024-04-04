@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -58,6 +59,7 @@ fun GameSummaryScreen(navController: NavController){
 
 @Composable
 fun ResultScreen(navController: NavController) {
+    val viewModel = remember { ProfileViewModel() }
     val context = LocalContext.current
     LaunchedEffect(Unit) {
 
@@ -65,56 +67,82 @@ fun ResultScreen(navController: NavController) {
 
     }
 
-    // Constants for button colors
-    val buttonBackgroundColor = Color(0xffF6B17A)
-    val buttonTextColor = Color(0xff2D3250)
 
     Column(
         modifier = Modifier
-            .background(Color(0xff1F2138))
+            .background(brush = back)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         // Game Summary Box
-        Box(
-            modifier = Modifier
-                .height(100.dp)
-                .shadow(
-                    30.dp,
-                    shape = RoundedCornerShape(20.dp),
-                    clip = true,
-                    spotColor = Color(0xffF6B17A)
-                )
-                .width(350.dp)
-                .absolutePadding(0.dp, 30.dp)
-                .background(Color(0xff424769), shape = RoundedCornerShape(20.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Game Summary",
-                style = TextStyle(
-                    fontFamily = FontFamily.Serif,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.White
-                )
-            )
+        Row(modifier = Modifier
+            .absolutePadding(0.dp,30.dp)
+            .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center) {
+            profile(name = GlobalVariables.username.value, profilesize = 50.dp, lettersize =30.sp , viewModel = viewModel)
+
         }
 
         GlobalVariables.Attempts.value  = GlobalVariables.wrongGuesscount.value+GlobalVariables.correctGuesscount.value
-        Box(modifier = Modifier
-            .background(Color(0xff7077A1), shape = RoundedCornerShape(10.dp))
-            .height(100.dp)
-            .width(200.dp), contentAlignment = Alignment.Center){
-            Text(text = "Attempts : ${GlobalVariables.Attempts.value}", style = TextStyle(),
+        Column(modifier = Modifier
+            .background(Color.Transparent, shape = RoundedCornerShape(10.dp))
+            .size(250.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally){
+            Row(modifier = Modifier
+                .height(40.dp)
+                .width(200.dp),
+                horizontalArrangement = Arrangement.SpaceBetween) {
+
+
+            Text(text = "Attempts :", style = TextStyle(),
                 fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 fontSize = 20.sp)
+            Text(text = "${GlobalVariables.Attempts.value}", style = TextStyle(),
+                fontFamily = FontFamily.Serif,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                fontSize = 20.sp)}
+            Row(modifier = Modifier
+                .height(40.dp)
+                .width(200.dp),
+                horizontalArrangement = Arrangement.SpaceBetween) {
+
+
+                Text(text = "Attempts :", style = TextStyle(),
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontSize = 20.sp)
+                Text(text = "${GlobalVariables.Attempts.value}", style = TextStyle(),
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontSize = 20.sp)}
+            Row(modifier = Modifier
+                .height(40.dp)
+                .width(200.dp),
+                horizontalArrangement = Arrangement.SpaceBetween) {
+
+
+                Text(text = "Attempts :", style = TextStyle(),
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontSize = 20.sp)
+                Text(text = "${GlobalVariables.Attempts.value}", style = TextStyle(),
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontSize = 20.sp)}
+
         }
 
-        // Score Box
+
 
 
         // Thanks Box
@@ -124,7 +152,7 @@ fun ResultScreen(navController: NavController) {
         Row(
             modifier = Modifier
                 .height(80.dp)
-                .padding(10.dp)
+                .absolutePadding(10.dp, 0.dp, 10.dp, 30.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -143,7 +171,7 @@ fun ResultScreen(navController: NavController) {
                 },
                 modifier = Modifier.width(150.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(buttonBackgroundColor)
+                colors = ButtonDefaults.buttonColors(Color(0xff2196F3))
             ) {
                 Text(
                     text = "Play again",
@@ -151,7 +179,7 @@ fun ResultScreen(navController: NavController) {
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Serif,
                         fontSize = 19.sp,
-                        color = buttonTextColor,
+                        color = Color.Black,
                         textAlign = TextAlign.Center
                     )
                 )
@@ -164,7 +192,7 @@ fun ResultScreen(navController: NavController) {
                 },
                 modifier = Modifier.width(150.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(buttonBackgroundColor)
+                colors = ButtonDefaults.buttonColors(Color(0xff2196F3))
             ) {
                 Text(
                     text = "Exit game",
@@ -172,7 +200,7 @@ fun ResultScreen(navController: NavController) {
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Serif,
                         fontSize = 20.sp,
-                        color = buttonTextColor,
+                        color = Color.Black,
                         textAlign = TextAlign.Center
                     )
                 )
